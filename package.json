@@ -1,0 +1,68 @@
+{
+  "name": "fs-gzip-blob-storage",
+  "version": "0.1.0",
+  "description": "Blob storage on filesystem with promises API",
+  "main": "lib/fs-gzip-blob-storage.js",
+  "typings": "lib/fs-gzip-blob-storage.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dex4er/js-fs-gzip-blob-storage"
+  },
+  "keywords": [
+    "blob",
+    "fs",
+    "promise",
+    "storage"
+  ],
+  "author": "Piotr Roszatycki",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dex4er/js-fs-gzip-blob-storage/issues"
+  },
+  "homepage": "http://github.com/dex4er/js-fs-gzip-blob-storage",
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "dependencies": {
+    "fs-blob-storage": "^0.2.0",
+    "pumpify": "^1.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^10.0.3",
+    "@types/pumpify": "^1.4.1",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "markdownlint-cli": "^0.8.1",
+    "mock-fs": "^4.4.2",
+    "promise-readable": "^3.1.5",
+    "promise-writable": "^3.1.2",
+    "pump": "^3.0.0",
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.3",
+    "tap": "^11.1.0",
+    "tap-given": "^0.6.0",
+    "tslint": "^5.9.1",
+    "tslint-config-standard": "^7.0.0",
+    "typescript": "^2.7.1"
+  },
+  "scripts": {
+    "pretest": "standard --verbose | snazzy && tsc --noEmit --pretty && tslint -t stylish -p . && echo markdownlint *.md",
+    "test": "tap test/*.js",
+    "test:coverage": "npm test -- --coverage"
+  },
+  "standard": {
+    "globals": [
+      "And",
+      "After",
+      "Before",
+      "Feature",
+      "Given",
+      "Scenario",
+      "Then",
+      "When"
+    ]
+  },
+  "nyc": {
+    "exclude": []
+  }
+}
