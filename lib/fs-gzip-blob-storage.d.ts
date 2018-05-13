@@ -1,6 +1,6 @@
 /// <reference types="node" />
 
-import { Readable, Writable } from 'stream'
+import Pumpify from 'pumpify'
 import zlib from 'zlib'
 
 import {
@@ -25,17 +25,19 @@ export interface FsGzipBlobStorageWriteStreamOptions extends FsBlobStorageWriteS
   encoding?: never
 }
 
-export type FsGzipBlobStorageCommitOptions = FsBlobStorageCommitOptions
-export type FsGzipBlobStorageRemoveOptions = FsBlobStorageRemoveOptions
+export interface FsGzipBlobStorageCommitOptions extends FsBlobStorageCommitOptions {}
+export interface FsGzipBlobStorageRemoveOptions extends FsBlobStorageRemoveOptions {}
 
-export class FsGzipBlobStorage extends FsBlobStorage {
+export class FsGzipBlobStorage {
   private readonly gzipExt: string
   private readonly gzipOptions?: zlib.ZlibOptions
 
+  private readonly storage: FsBlobStorage
+
   constructor (options: FsGzipBlobStorageOptions)
 
-  createWriteStream (key: string, options?: FsGzipBlobStorageWriteStreamOptions): Promise<Writable>
-  createReadStream (key: string, options?: FsGzipBlobStorageReadStreamOptions): Promise<Readable>
+  createWriteStream (key: string, options?: FsGzipBlobStorageWriteStreamOptions): Promise<Pumpify>
+  createReadStream (key: string, options?: FsGzipBlobStorageReadStreamOptions): Promise<Pumpify>
   commit (key: string, options?: FsGzipBlobStorageCommitOptions): Promise<void>
   remove (key: string, options?: FsGzipBlobStorageRemoveOptions): Promise<void>
 }
