@@ -4,6 +4,9 @@
 
 Blob gzipped storage on filesystem with promises API.
 
+This is a wrapper for
+[`fs-blob-storage`](https://www.npmjs.com/package/fs-blob-storage)
+
 ## Requirements
 
 This module requires ES6 with Node >= 6.
@@ -68,9 +71,10 @@ _Options:_
 * `part` is a extension added to file name which can be later commited
    (optional, default: ".part")
 
-Creates a writable stream for a new object in the storage. Object is stored with
-the file name based on `key` and `ext` and `part`. Throws an error if has
-occurred and if the file already exists for exclusive mode.
+Creates a writable stream for a new object in the storage. Object is gzipped and
+stored with the file name based on `key` and `ext` and `gzipExt` and `part`.
+Throws an error if has occurred and if the file already exists for exclusive
+mode.
 
 ### createReadStream
 
@@ -83,8 +87,8 @@ _Options:_
 * `ext` is a default extension added to file name for the object (optional,
    default: "")
 
-Creates a readable stream for an existing object in the storage. Throws an error
-if has occurred or the object doesn't exist or its size is zero.
+Creates a readable stream for an existing, gunzipped object in the storage.
+Throws an error if has occurred or the object doesn't exist or its size is zero.
 
 ### commit
 
