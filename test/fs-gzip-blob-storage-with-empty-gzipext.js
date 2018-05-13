@@ -21,7 +21,7 @@ const zlib = require('zlib')
 
 const STORAGEDIR = '/tmp/storage'
 
-Feature('Test FsGzipBlobStorage with ext option', () => {
+Feature('Test FsGzipBlobStorage with empty gzipExt option', () => {
   const fakeFilesystem = {
     [STORAGEDIR]: {
       'commit.txt.part': zlib.gzipSync('another file content here'),
