@@ -2,10 +2,12 @@
 
 const FsGzipBlobStorage = require('../lib/fs-gzip-blob-storage')
 
-const pump = require('pump')
+require('@dex4er/stream.pipeline/auto')
+
+const stream = require('stream')
 const util = require('util')
 
-const pumpPromise = util.promisify(pump)
+const pipelinePromise = util.promisify(stream.pipeline)
 
 const SPOOLDIR = process.env.SPOOLDIR || '.'
 const DEBUG = Boolean(process.env.DEBUG)
@@ -20,12 +22,12 @@ async function main () {
     process.exit(1)
   }
 
-  const stream = await storage.createReadStream(key)
+  const readable = await storage.createReadStream(key)
   if (DEBUG) console.debug('createReadStream returned')
 
   // extra debug trace
   if (DEBUG) {
-    for (const s of [stream, process.stdout]) {
+    for (const s of [readable, readable._readable, process.stdout]) {
       for (const event of ['close', 'data', 'drain', 'end', 'error', 'finish', 'pipe', 'readable', 'unpipe']) {
         if (s === process.stdout && ['data', 'readable'].includes(event)) continue
         const name = s === process.stdout ? 'stdout' : s.constructor.name
@@ -36,7 +38,7 @@ async function main () {
 
   if (DEBUG) console.info(`Reading from ${SPOOLDIR}/${key} ...`)
 
-  await pumpPromise(stream, process.stdout)
+  await pipelinePromise(readable, process.stdout)
 
   if (DEBUG) console.debug('stream ended')
   if (DEBUG) console.info('Done.')

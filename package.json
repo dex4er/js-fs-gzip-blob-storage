@@ -1,6 +1,6 @@
 {
   "name": "fs-gzip-blob-storage",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Blob storage on filesystem with promises API",
   "main": "lib/fs-gzip-blob-storage.js",
   "typings": "lib/fs-gzip-blob-storage.d.ts",
@@ -24,12 +24,12 @@
     "node": ">=4.0.0"
   },
   "dependencies": {
+    "@dex4er/stream.pipeline": "^1.0.0",
     "fs-blob-storage": "^0.3.0",
     "pumpify": "^1.5.0"
   },
   "devDependencies": {
     "@types/node": "^10.0.8",
-    "@types/pump": "^1.0.1",
     "@types/pumpify": "^1.4.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
@@ -37,7 +37,6 @@
     "mock-fs": "^4.5.0",
     "promise-readable": "^3.1.5",
     "promise-writable": "^3.1.2",
-    "pump": "^3.0.0",
     "snazzy": "^7.1.1",
     "standard": "^11.0.1",
     "tap": "^11.1.5",

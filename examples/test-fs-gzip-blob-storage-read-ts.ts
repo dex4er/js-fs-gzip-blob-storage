@@ -2,10 +2,12 @@
 
 import FsGzipBlobStorage from '../lib/fs-gzip-blob-storage'
 
-import pump from 'pump'
+import '@dex4er/stream.pipeline/auto'
+
+import stream from 'stream'
 import util from 'util'
 
-const pumpPromise: (...streams: pump.Stream[]) => Promise<void> = util.promisify(pump)
+const pipelinePromise = util.promisify(stream.pipeline)
 
 const SPOOLDIR = process.env.SPOOLDIR || '.'
 const DEBUG = process.env.DEBUG === 'true'
@@ -20,13 +22,13 @@ async function main (): Promise<void> {
     process.exit(1)
   }
 
-  const stream = await storage.createReadStream(key)
+  const readable = await storage.createReadStream(key)
   if (DEBUG) console.debug('createReadStream returned')
 
   // extra debug trace
   // tslint:disable:no-unnecessary-type-assertion
   if (DEBUG) {
-    for (const s of [stream, process.stdout] as any[]) {
+    for (const s of [readable, (readable as any)._readable, process.stdout] as any[]) {
       for (const event of ['close', 'data', 'drain', 'end', 'error', 'finish', 'pipe', 'readable', 'unpipe']) {
         if (s === process.stdout && ['data', 'readable'].includes(event)) continue
         const name = s === process.stdout ? 'stdout' : s.constructor.name
@@ -37,7 +39,7 @@ async function main (): Promise<void> {
 
   if (DEBUG) console.info(`Reading from ${SPOOLDIR}/${key} ...`)
 
-  await pumpPromise(stream, process.stdout)
+  await pipelinePromise(readable, process.stdout)
 
   if (DEBUG) console.debug('stream ended')
   if (DEBUG) console.info('Done.')
