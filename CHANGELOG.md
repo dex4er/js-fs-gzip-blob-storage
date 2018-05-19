@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.2.1 2018-05-19
+
+* Fixes jsdoc types.
+
 ## v0.2.0 2018-05-18
 
 * Uses `stream.pipeline` shim instead `pump` in example scripts.
