@@ -1,6 +1,6 @@
 {
   "name": "fs-gzip-blob-storage",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Blob storage on filesystem with promises API",
   "main": "lib/fs-gzip-blob-storage.js",
   "typings": "lib/fs-gzip-blob-storage.d.ts",
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@dex4er/stream.pipeline": "^1.0.0",
-    "fs-blob-storage": "^0.4.1",
+    "fs-blob-storage": "^0.5.0",
     "pumpify": "^1.5.1"
   },
   "devDependencies": {

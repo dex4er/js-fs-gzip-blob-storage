@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.0 2018-05-19
+
+* New constructor option `defaultExt` and `defaultPart`.
+
 ## v0.2.1 2018-05-19
 
 * Fixes jsdoc types.

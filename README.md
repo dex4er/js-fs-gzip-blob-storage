@@ -17,10 +17,10 @@ This module requires ES6 with Node >= 6.
 npm install fs-gzip-blob-storage
 ```
 
-_Typescript:_
+_Additionally for Typescript:_
 
 ```shell
-npm install -D fs-gzip-blob-storage @types/node
+npm install -D @types/node
 ```
 
 ## Usage
@@ -43,11 +43,14 @@ const storage = new FsGzipBlobStorage(options)
 
 _Options:_
 
+* `defaultExt` is a default `ext` argument for methods (optional, default: "")
+* `defaultPart` is a default `part` argument for methods (optional, default:
+  ".part")
 * `exclusive` if is true then can't create new object if already exists with
   the same key (optional, default: false)
 * `gzipExt` is an extra extension for gzipped files (optional, default: ".gz")
 * `gzipOptions` is an object with options for gzip/gunzip (optional)
-* `path` is a directory path of the storage
+* `path` is a directory path of the storage (optional, default: ".")
 
 _Example:_
 
@@ -67,9 +70,9 @@ const writable = await storage.createWriteStream(key, options)
 _Options:_
 
 * `ext` is a default extension added to file name for the object (optional,
-   default: "")
+   default: `this.defaultExt`)
 * `part` is a extension added to file name which can be later commited
-   (optional, default: ".part")
+   (optional, default: `this.defaultPart`)
 
 Creates a writable stream for a new object in the storage. Object is gzipped and
 stored with the file name based on `key` and `ext` and `gzipExt` and `part`.
@@ -85,7 +88,7 @@ const readable = await storage.createWriteStream(key, options)
 _Options:_
 
 * `ext` is a default extension added to file name for the object (optional,
-   default: "")
+   default: `this.defaultExt`)
 
 Creates a readable stream for an existing, gunzipped object in the storage.
 Throws an error if has occurred or the object doesn't exist or its size is zero.
@@ -99,9 +102,9 @@ await storage.commit(key, options)
 _Options:_
 
 * `ext` is a default extension added to file name for the object (optional,
-   default: "")
+   default: `this.defaultExt`)
 * `part` is a extension added to file name which can be later commited
-   (optional, default: ".part")
+   (optional, default: `this.defaultPart`)
 
 Commits the object in the storage. It means that file name for the object is
 renamed and the additional extension for partial objects is removed. Throws an
@@ -116,7 +119,7 @@ await storage.remove(key, options)
 _Options:_
 
 * `ext` is a default extension added to file name for the object (optional,
-   default: "")
+   default: `this.defaultExt`)
 
 Removes the object from the storage. Throws an error if has occurred or the
 object doesn't exist.
