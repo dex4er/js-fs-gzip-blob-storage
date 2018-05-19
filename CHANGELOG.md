@@ -3,6 +3,8 @@
 ## v0.3.0 2018-05-19
 
 * New constructor option `defaultExt` and `defaultPart`.
+* Typescript: return `Promise<Readable>` and `Promise<Writable>` instead
+  `Promise<Pumpify>`.
 
 ## v0.2.1 2018-05-19
 

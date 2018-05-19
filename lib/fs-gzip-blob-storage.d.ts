@@ -1,6 +1,6 @@
 /// <reference types="node" />
 
-import Pumpify from 'pumpify'
+import { Readable, Writable } from 'stream'
 import zlib from 'zlib'
 
 import {
@@ -36,8 +36,8 @@ export class FsGzipBlobStorage {
 
   constructor (options: FsGzipBlobStorageOptions)
 
-  createWriteStream (key: string, options?: FsGzipBlobStorageWriteStreamOptions): Promise<Pumpify>
-  createReadStream (key: string, options?: FsGzipBlobStorageReadStreamOptions): Promise<Pumpify>
+  createWriteStream (key: string, options?: FsGzipBlobStorageWriteStreamOptions): Promise<Writable>
+  createReadStream (key: string, options?: FsGzipBlobStorageReadStreamOptions): Promise<Readable>
   commit (key: string, options?: FsGzipBlobStorageCommitOptions): Promise<void>
   remove (key: string, options?: FsGzipBlobStorageRemoveOptions): Promise<void>
 }
