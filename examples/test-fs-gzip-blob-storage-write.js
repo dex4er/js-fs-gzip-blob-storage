@@ -2,7 +2,7 @@
 
 const FsGzipBlobStorage = require('../lib/fs-gzip-blob-storage')
 
-require('@dex4er/stream.pipeline/auto')
+require('stream.pipeline-shim/auto')
 
 const stream = require('stream')
 const util = require('util')

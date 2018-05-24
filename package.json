@@ -24,7 +24,6 @@
     "node": ">=4.0.0"
   },
   "dependencies": {
-    "@dex4er/stream.pipeline": "^1.0.0",
     "fs-blob-storage": "^0.5.1",
     "pumpify": "^1.5.1"
   },
@@ -44,6 +43,7 @@
     "promise-readable": "^3.1.5",
     "promise-writable": "^3.1.2",
     "standard": "^11.0.1",
+    "stream.pipeline-shim": "^1.0.2",
     "tap": "^12.0.1",
     "tap-given": "^0.6.0",
     "tslint": "^5.10.0",

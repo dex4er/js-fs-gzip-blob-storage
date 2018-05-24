@@ -2,7 +2,7 @@
 
 import FsGzipBlobStorage from '../lib/fs-gzip-blob-storage'
 
-import '@dex4er/stream.pipeline/auto'
+import 'stream.pipeline-shim/auto'
 
 import stream from 'stream'
 import util from 'util'

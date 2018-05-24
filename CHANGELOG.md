@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.2 2018-05-24
+
+* Uses `stream.pipeline-shim` package in examples. Thank you, "npm, inc", for
+  making my life harder :-/
+
 ## v0.3.1 2018-05-24
 
 * Upgrade fs-blob-storage to v0.5.1: make storage compatible with Windows.
