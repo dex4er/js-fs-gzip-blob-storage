@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.1 2018-05-24
+
+* Upgrade fs-blob-storage to v0.5.1: make storage compatible with Windows.
+
 ## v0.3.0 2018-05-19
 
 * New constructor option `defaultExt` and `defaultPart`.
