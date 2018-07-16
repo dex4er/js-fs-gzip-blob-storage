@@ -1,6 +1,6 @@
 {
   "name": "fs-gzip-blob-storage",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Blob storage on filesystem with promises API",
   "main": "lib/fs-gzip-blob-storage.js",
   "typings": "lib/fs-gzip-blob-storage.d.ts",
@@ -24,7 +24,7 @@
     "node": ">=4.0.0"
   },
   "dependencies": {
-    "fs-blob-storage": "^0.5.1",
+    "fs-blob-storage": "^0.6.1",
     "pumpify": "^1.5.1"
   },
   "devDependencies": {
@@ -39,7 +39,6 @@
     "eslint-plugin-promise": "^3.7.0",
     "eslint-plugin-standard": "^3.1.0",
     "markdownlint-cli": "^0.9.0",
-    "mock-fs": "^4.5.0",
     "promise-readable": "^3.1.5",
     "promise-writable": "^3.1.2",
     "standard": "^11.0.1",

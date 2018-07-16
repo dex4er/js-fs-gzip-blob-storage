@@ -8,11 +8,10 @@ const chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 chai.should()
 
-const mockFs = require('mock-fs')
+const mockFs = require('../mock/mock-fs')
 
 const { FsGzipBlobStorage } = require('../lib/fs-gzip-blob-storage')
 
-const fs = require('fs')
 const path = require('path')
 const PromiseReadable = require('promise-readable')
 const PromiseWritable = require('promise-writable')
@@ -38,11 +37,11 @@ Feature('Test FsGzipBlobStorage with defaultExt option', () => {
     let writable
 
     Before(() => {
-      mockFs(fakeFilesystem)
+      mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, defaultExt: '.txt' })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs, defaultExt: '.txt' })
     })
 
     When('key test is passed in', () => {
@@ -57,7 +56,7 @@ Feature('Test FsGzipBlobStorage with defaultExt option', () => {
     })
 
     And('.part file should be created', () => {
-      return fs.existsSync(realFilename).should.be.true
+      return mockFs.existsSync(realFilename).should.be.true
     })
 
     When('I write to the Writable stream', () => {
@@ -66,12 +65,8 @@ Feature('Test FsGzipBlobStorage with defaultExt option', () => {
     })
 
     Then('new file contains the new content', () => {
-      const content = zlib.gunzipSync(fs.readFileSync(realFilename)).toString()
+      const content = zlib.gunzipSync(mockFs.readFileSync(realFilename)).toString()
       content.should.equal('new content here')
-    })
-
-    After(() => {
-      mockFs.restore()
     })
   })
 
@@ -82,11 +77,11 @@ Feature('Test FsGzipBlobStorage with defaultExt option', () => {
     let storage
 
     Before(() => {
-      mockFs(fakeFilesystem)
+      mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, defaultExt: '.txt' })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs, defaultExt: '.txt' })
     })
 
     When('key test is passed in', () => {
@@ -104,10 +99,6 @@ Feature('Test FsGzipBlobStorage with defaultExt option', () => {
       const promiseReadable = new PromiseReadable(readable)
       return promiseReadable.read().should.eventually.deep.equal(Buffer.from('file content here'))
     })
-
-    After(() => {
-      mockFs.restore()
-    })
   })
 
   Scenario('FsGzipBlobStorage commits file', () => {
@@ -117,11 +108,11 @@ Feature('Test FsGzipBlobStorage with defaultExt option', () => {
     let storage
 
     Before(() => {
-      mockFs(fakeFilesystem)
+      mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, defaultExt: '.txt' })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs, defaultExt: '.txt' })
     })
 
     When('key rs is passed in', () => {
@@ -129,11 +120,7 @@ Feature('Test FsGzipBlobStorage with defaultExt option', () => {
     })
 
     Then('rs.part should be renamed to rs', () => {
-      return fs.existsSync(realFilename).should.be.true
-    })
-
-    After(() => {
-      mockFs.restore()
+      return mockFs.existsSync(realFilename).should.be.true
     })
   })
 
@@ -144,11 +131,11 @@ Feature('Test FsGzipBlobStorage with defaultExt option', () => {
     let storage
 
     Before(() => {
-      mockFs(fakeFilesystem)
+      mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, defaultExt: '.txt' })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs, defaultExt: '.txt' })
     })
 
     When('key remove is passed in', () => {
@@ -156,11 +143,7 @@ Feature('Test FsGzipBlobStorage with defaultExt option', () => {
     })
 
     Then('remove should be removed', () => {
-      return fs.existsSync(realFilename).should.be.false
-    })
-
-    After(() => {
-      mockFs.restore()
+      return mockFs.existsSync(realFilename).should.be.false
     })
   })
 })

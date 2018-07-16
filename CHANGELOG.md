@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.4.0 2018-07-16
+
+* New option `fs` with File System module.
+* Tests don't use `mock-fs` package anymore.
+* Tweaked jsdoc.
+* Pack only important files.
+
 ## v0.3.2 2018-05-24
 
 * Uses `stream.pipeline-shim` package in examples. Thank you, "npm, inc", for

@@ -8,11 +8,10 @@ const chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 chai.should()
 
-const mockFs = require('mock-fs')
+const mockFs = require('../mock/mock-fs')
 
 const { FsGzipBlobStorage } = require('../lib/fs-gzip-blob-storage')
 
-const fs = require('fs')
 const path = require('path')
 const PromiseWritable = require('promise-writable')
 const Pumpify = require('pumpify')
@@ -38,11 +37,11 @@ Feature('Test FsGzipBlobStorage overwrite', () => {
     let writable
 
     Before(() => {
-      mockFs(fakeFilesystem)
+      mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs })
     })
 
     When('key test is passed in', () => {
@@ -57,7 +56,7 @@ Feature('Test FsGzipBlobStorage overwrite', () => {
     })
 
     And('.part file should be created', () => {
-      return fs.existsSync(realFilename).should.be.true
+      return mockFs.existsSync(realFilename).should.be.true
     })
 
     When('I write to the Writable stream', () => {
@@ -66,12 +65,8 @@ Feature('Test FsGzipBlobStorage overwrite', () => {
     })
 
     Then('new file contains the new content', () => {
-      const content = zlib.gunzipSync(fs.readFileSync(realFilename)).toString()
+      const content = zlib.gunzipSync(mockFs.readFileSync(realFilename)).toString()
       content.should.equal('new content here')
-    })
-
-    After(() => {
-      mockFs.restore()
     })
   })
 
@@ -83,11 +78,11 @@ Feature('Test FsGzipBlobStorage overwrite', () => {
     let writable
 
     Before(() => {
-      mockFs(fakeFilesystem)
+      mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs })
     })
 
     When('key test is passed in', () => {
@@ -102,7 +97,7 @@ Feature('Test FsGzipBlobStorage overwrite', () => {
     })
 
     And('.part file should be created', () => {
-      return fs.existsSync(realFilename).should.be.true
+      return mockFs.existsSync(realFilename).should.be.true
     })
 
     When('I write to the Writable stream', () => {
@@ -111,12 +106,8 @@ Feature('Test FsGzipBlobStorage overwrite', () => {
     })
 
     Then('new file contains the new content', () => {
-      const content = zlib.gunzipSync(fs.readFileSync(realFilename)).toString()
+      const content = zlib.gunzipSync(mockFs.readFileSync(realFilename)).toString()
       content.should.equal('new content here')
-    })
-
-    After(() => {
-      mockFs.restore()
     })
   })
 
@@ -127,11 +118,11 @@ Feature('Test FsGzipBlobStorage overwrite', () => {
     let storage
 
     Before(() => {
-      mockFs(fakeFilesystem)
+      mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs })
     })
 
     When('key rs is passed in', () => {
@@ -139,11 +130,7 @@ Feature('Test FsGzipBlobStorage overwrite', () => {
     })
 
     Then('rs.part should be renamed to rs', () => {
-      return fs.existsSync(realFilename).should.be.true
-    })
-
-    After(() => {
-      mockFs.restore()
+      return mockFs.existsSync(realFilename).should.be.true
     })
   })
 })

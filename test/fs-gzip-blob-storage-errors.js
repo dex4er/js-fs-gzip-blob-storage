@@ -8,7 +8,7 @@ const chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 chai.should()
 
-const mockFs = require('mock-fs')
+const mockFs = require('../mock/mock-fs')
 
 const { FsGzipBlobStorage } = require('../lib/fs-gzip-blob-storage')
 
@@ -28,11 +28,11 @@ Feature('Test FsGzipBlobStorage errors', () => {
     let storage
 
     Before(() => {
-      mockFs(fakeFilesystem)
+      mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs })
     })
 
     When('key test is passed in', () => {
@@ -45,10 +45,6 @@ Feature('Test FsGzipBlobStorage errors', () => {
     Then('error is caught', () => {
       error.should.be.an.instanceof(Error)
         .and.have.property('code').that.is.equal('ENOENT')
-    })
-
-    After(() => {
-      mockFs.restore()
     })
   })
 
@@ -59,11 +55,11 @@ Feature('Test FsGzipBlobStorage errors', () => {
     let storage
 
     Before(() => {
-      mockFs(fakeFilesystem)
+      mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs })
     })
 
     When('key test is passed in', () => {
@@ -77,10 +73,6 @@ Feature('Test FsGzipBlobStorage errors', () => {
       error.should.be.an.instanceof(Error)
         .and.have.property('code').that.is.equal('ENOENT')
     })
-
-    After(() => {
-      mockFs.restore()
-    })
   })
 
   Scenario('FsGzipBlobStorage tries to commit file when part file does not exist', () => {
@@ -90,11 +82,11 @@ Feature('Test FsGzipBlobStorage errors', () => {
     let storage
 
     Before(() => {
-      mockFs(fakeFilesystem)
+      mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs })
     })
 
     When('key test is passed in', () => {
@@ -108,10 +100,6 @@ Feature('Test FsGzipBlobStorage errors', () => {
       error.should.be.an.instanceof(Error)
         .and.have.property('code').that.is.equal('ENOENT')
     })
-
-    After(() => {
-      mockFs.restore()
-    })
   })
 
   Scenario('FsGzipBlobStorage tries to remove file when object does not exist', () => {
@@ -121,11 +109,11 @@ Feature('Test FsGzipBlobStorage errors', () => {
     let storage
 
     Before(() => {
-      mockFs(fakeFilesystem)
+      mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs })
     })
 
     When('key remove is passed in', () => {
@@ -138,10 +126,6 @@ Feature('Test FsGzipBlobStorage errors', () => {
     Then('error is caught', () => {
       error.should.be.an.instanceof(Error)
         .and.have.property('code').that.is.equal('ENOENT')
-    })
-
-    After(() => {
-      mockFs.restore()
     })
   })
 })
