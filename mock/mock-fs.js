@@ -91,7 +91,7 @@ function existsSync (filepath) {
 }
 
 function init (newFakeFilesystem) {
-  fakeFilesystem = JSON.parse(JSON.stringify(newFakeFilesystem), (key, value) => { return ((value instanceof Object) && (value.type == 'Buffer')) ? Buffer.from(value.data) : value })
+  fakeFilesystem = JSON.parse(JSON.stringify(newFakeFilesystem), (key, value) => { return ((value instanceof Object) && (value.type === 'Buffer')) ? Buffer.from(value.data) : value })
   fds = []
 }
 
