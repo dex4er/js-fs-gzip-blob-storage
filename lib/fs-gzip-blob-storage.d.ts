@@ -29,11 +29,6 @@ export interface FsGzipBlobStorageCommitOptions extends FsBlobStorageCommitOptio
 export interface FsGzipBlobStorageRemoveOptions extends FsBlobStorageRemoveOptions {}
 
 export class FsGzipBlobStorage {
-  private readonly gzipExt: string
-  private readonly gzipOptions?: zlib.ZlibOptions
-
-  private readonly storage: FsBlobStorage
-
   constructor (options: FsGzipBlobStorageOptions)
 
   createWriteStream (key: string, options?: FsGzipBlobStorageWriteStreamOptions): Promise<Writable>
