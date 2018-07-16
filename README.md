@@ -1,8 +1,10 @@
 # fs-gzip-blob-storage
 
+<!-- markdownlint-disable MD013 -->
 [![Build Status](https://secure.travis-ci.org/dex4er/js-fs-gzip-blob-storage.svg)](http://travis-ci.org/dex4er/js-fs-gzip-blob-storage) [![Coverage Status](https://coveralls.io/repos/github/dex4er/js-fs-gzip-blob-storage/badge.svg)](https://coveralls.io/github/dex4er/js-fs-gzip-blob-storage) [![npm](https://img.shields.io/npm/v/fs-gzip-blob-storage.svg)](https://www.npmjs.com/package/fs-gzip-blob-storage)
+<!-- markdownlint-enable MD013 -->
 
-Blob gzipped storage on filesystem with promises API.
+Blob storage on filesystem, with gzip, streams and promises API.
 
 This is a wrapper for
 [`fs-blob-storage`](https://www.npmjs.com/package/fs-blob-storage)
