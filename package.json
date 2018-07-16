@@ -1,7 +1,7 @@
 {
   "name": "fs-gzip-blob-storage",
   "version": "0.4.0",
-  "description": "Blob storage on filesystem with promises API",
+  "description": "Blob storage on filesystem, with gzip, streams and promises API",
   "main": "lib/fs-gzip-blob-storage.js",
   "typings": "lib/fs-gzip-blob-storage.d.ts",
   "repository": {
@@ -21,7 +21,7 @@
   },
   "homepage": "http://github.com/dex4er/js-fs-gzip-blob-storage",
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=6.0.0"
   },
   "dependencies": {
     "fs-blob-storage": "^0.6.1",
