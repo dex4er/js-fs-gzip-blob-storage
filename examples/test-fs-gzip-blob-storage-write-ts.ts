@@ -1,7 +1,5 @@
 #!/usr/bin/env ts-node
 
-/// <reference lib="es2017" />
-
 import FsGzipBlobStorage from '../src/fs-gzip-blob-storage'
 
 import 'stream.pipeline-shim/auto'

@@ -4,6 +4,7 @@
     "tslint-config-standard"
   ],
   "rules": {
+    "await-promise": [true, "Promise", "PromiseLike"], // chai-as-promised
     "forin": false, // should be safe for containers
     "interface-name": false, // don't like hungarian notation
     "max-line-length": false, // looooong lines are not a problem with good text editor
