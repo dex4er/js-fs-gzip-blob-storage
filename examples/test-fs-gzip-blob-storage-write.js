@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const FsGzipBlobStorage = require('../lib/fs-gzip-blob-storage')
+const { FsGzipBlobStorage } = require('../lib/fs-gzip-blob-storage')
 
 require('stream.pipeline-shim/auto')
 

@@ -1,45 +1,38 @@
-'use strict'
+import { Before, Feature, Given, Scenario, Then, When } from './lib/steps'
 
-const t = require('tap')
-require('tap-given')(t)
+import FsGzipBlobStorage from '../src/fs-gzip-blob-storage'
 
-const chai = require('chai')
-const chaiAsPromised = require('chai-as-promised')
-chai.use(chaiAsPromised)
-chai.should()
-
-const mockFs = require('../mock/mock-fs')
-
-const { FsGzipBlobStorage } = require('../lib/fs-gzip-blob-storage')
+import mockFs from './lib/mock-fs'
 
 const STORAGEDIR = '/tmp/storage'
 
 Feature('Test FsGzipBlobStorage errors', () => {
   const fakeFilesystem = {
     [STORAGEDIR]: {
-      'empty.gz': ''
+      'empty.gz': Buffer.alloc(0)
     }
   }
 
   Scenario('FsGzipBlobStorage tries to produce read stream when object does not exist', () => {
     const testKey = 'notexist'
 
-    let error
-    let storage
+    let error: Error
+    let storage: FsGzipBlobStorage
 
     Before(() => {
       mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
     })
 
-    When('key test is passed in', () => {
-      return storage.createReadStream(testKey)
-        .catch((err) => {
-          error = err
-        })
+    When('key test is passed in', async () => {
+      try {
+        await storage.createReadStream(testKey)
+      } catch (e) {
+        error = e
+      }
     })
 
     Then('error is caught', () => {
@@ -51,22 +44,23 @@ Feature('Test FsGzipBlobStorage errors', () => {
   Scenario('FsGzipBlobStorage tries to produce read stream when object is empty', () => {
     const testKey = 'empty'
 
-    let error
-    let storage
+    let error: Error
+    let storage: FsGzipBlobStorage
 
     Before(() => {
       mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
     })
 
-    When('key test is passed in', () => {
-      return storage.createReadStream(testKey)
-        .catch((err) => {
-          error = err
-        })
+    When('key test is passed in', async () => {
+      try {
+        await storage.createReadStream(testKey)
+      } catch (e) {
+        error = e
+      }
     })
 
     Then('error is caught', () => {
@@ -78,22 +72,23 @@ Feature('Test FsGzipBlobStorage errors', () => {
   Scenario('FsGzipBlobStorage tries to commit file when part file does not exist', () => {
     const testKey = 'notexist'
 
-    let error
-    let storage
+    let error: Error
+    let storage: FsGzipBlobStorage
 
     Before(() => {
       mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
     })
 
-    When('key test is passed in', () => {
-      return storage.commit(testKey)
-        .catch((err) => {
-          error = err
-        })
+    When('key test is passed in', async () => {
+      try {
+        await storage.commit(testKey)
+      } catch (e) {
+        error = e
+      }
     })
 
     Then('error is caught', () => {
@@ -105,22 +100,23 @@ Feature('Test FsGzipBlobStorage errors', () => {
   Scenario('FsGzipBlobStorage tries to remove file when object does not exist', () => {
     const testKey = 'notexist'
 
-    let error
-    let storage
+    let error: Error
+    let storage: FsGzipBlobStorage
 
     Before(() => {
       mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
     })
 
-    When('key remove is passed in', () => {
-      return storage.remove(testKey)
-        .catch((err) => {
-          error = err
-        })
+    When('key remove is passed in', async () => {
+      try {
+        await storage.remove(testKey)
+      } catch (e) {
+        error = e
+      }
     })
 
     Then('error is caught', () => {

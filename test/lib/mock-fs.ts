@@ -1,59 +1,76 @@
-const fs = require('fs')
-const path = require('path')
-const { Readable, Writable } = require('stream')
+// tslint:disable:max-classes-per-file
+// tslint:disable:typedef
 
-let fakeFilesystem = {}
-let fds = []
+import fs from 'fs'
+import path from 'path'
+import { Readable, Writable } from 'stream'
 
-function TRACE (...args) {
+interface FakeFilesystemEntry {
+  [path: string]: Buffer
+}
+
+interface FakeFilesystem {
+  [dir: string]: FakeFilesystemEntry
+}
+
+interface FdsCache {
+  filepath: string
+  offset: number
+}
+
+let fakeFilesystem: FakeFilesystem = {}
+let fds: FdsCache[] = []
+
+function TRACE (...args: any[]): void {
   if (process.env.TEST_TRACE_MOCK_FS) {
-    console.log(...args)
+    console.debug(...args)
   }
 }
 
-class MockFsReadable extends Readable {
-  constructor (fd, options) {
+export class MockFsReadable extends Readable {
+  private offset = 0
+
+  constructor (private fd: number, options: any) {
     super(options)
-    this.fd = fd
-    this.offset = 0
   }
-  _read (size) {
+
+  _read (size: number): void {
     TRACE('_read', size, { fd: this.fd })
     if (size === 0) {
-      this.push(null)
-    } else {
-      size = size || 16384
-      const { filepath } = fds[this.fd] || {}
-      if (filepath) {
-        const { dir, base } = path.parse(filepath)
-        const chunk = fakeFilesystem[dir][base].slice(this.offset, size)
-        this.offset += size
-        this.push(chunk || null)
-      } else {
-        this.push(null)
-      }
+      return void this.push(null)
     }
+    size = size || 16384
+    const { filepath } = fds[this.fd] || { filepath: '' }
+    if (!filepath) {
+      return void this.push(null)
+    }
+    const { dir, base } = path.parse(filepath)
+    if (!fakeFilesystem[dir][base]) {
+      return void this.push(null)
+    }
+    const chunk = fakeFilesystem[dir][base].slice(this.offset, size)
+    this.offset += size
+    this.push(chunk || null)
   }
 }
 
-class MockFsWritable extends Writable {
-  constructor (fd, options) {
+export class MockFsWritable extends Writable {
+  constructor (private fd: number, options: any) {
     super(options)
-    this.fd = fd
-    this.offset = 0
   }
-  _write (chunk, encoding, callback) {
+
+  _write (chunk: string, encoding: string, callback: () => void): void {
     TRACE('_write', chunk, encoding, { fd: this.fd })
-    const { filepath } = fds[this.fd] || {}
+    const { filepath } = fds[this.fd] || { filepath: '' }
     if (filepath) {
       const { dir, base } = path.parse(filepath)
-      fakeFilesystem[dir][base] = Buffer.concat([fakeFilesystem[dir][base], chunk])
+      fakeFilesystem[dir][base] = Buffer.concat([fakeFilesystem[dir][base], Buffer.from(chunk)])
     }
     callback()
   }
 }
 
-function close (fd, callback) {
+export function close (fd: number, callback: (err: NodeJS.ErrnoException) => void): void {
   TRACE('close', fd)
   if (fds[fd]) {
     delete fds[fd]
@@ -63,7 +80,7 @@ function close (fd, callback) {
   }
 }
 
-function createReadStream (_filepath, options) {
+export function createReadStream (_filepath: string, options: any): MockFsReadable {
   TRACE('createReadStream', _filepath, options)
   const { fd } = options
   const { filepath } = fds[fd]
@@ -74,7 +91,7 @@ function createReadStream (_filepath, options) {
   return new MockFsReadable(fd, options)
 }
 
-function createWriteStream (filepath, options) {
+export function createWriteStream (filepath: string, options: any): MockFsWritable {
   TRACE('createWriteStream', filepath, options)
   const { fd } = options
   const { dir } = path.parse(filepath)
@@ -84,31 +101,36 @@ function createWriteStream (filepath, options) {
   return new MockFsWritable(fd, options)
 }
 
-function existsSync (filepath) {
+export function existsSync (filepath: string): boolean {
   TRACE('existsSync', filepath)
   const { dir, base } = path.parse(filepath)
   return fakeFilesystem[dir] && base in fakeFilesystem[dir]
 }
 
-function init (newFakeFilesystem) {
-  fakeFilesystem = JSON.parse(JSON.stringify(newFakeFilesystem), (key, value) => { return ((value instanceof Object) && (value.type === 'Buffer')) ? Buffer.from(value.data) : value })
+export function init (newFakeFilesystem: FakeFilesystem): void {
+  fakeFilesystem = JSON.parse(JSON.stringify(newFakeFilesystem), (_key, value) => ((value instanceof Object) && (value.type === 'Buffer')) ? Buffer.from(value.data) : value)
   fds = []
 }
 
-function mkdir (dirpath, mode, callback) {
+export function mkdir (dirpath: string, mode: number, callback: (err: NodeJS.ErrnoException) => void): void
+export function mkdir (dirpath: string, callback: (err: NodeJS.ErrnoException) => void): void
+
+export function mkdir (dirpath: string, mode: number | ((err: NodeJS.ErrnoException) => void), callback?: (err: NodeJS.ErrnoException) => void): void {
   TRACE('mkdir', dirpath, mode)
   if (typeof mode === 'function') {
     callback = mode
     mode = 0o777
   }
-  if (fakeFilesystem[dirpath]) {
-    return process.nextTick(callback, Object.assign(new Error('file already exists: ' + dirpath), { errno: -17, code: 'EEXIST', syscall: 'mkdir', path: dirpath }))
+  if (callback) {
+    if (fakeFilesystem[dirpath]) {
+      return process.nextTick(callback, Object.assign(new Error('file already exists: ' + dirpath), { errno: -17, code: 'EEXIST', syscall: 'mkdir', path: dirpath }))
+    }
+    fakeFilesystem[dirpath] = {}
+    process.nextTick(callback, null)
   }
-  fakeFilesystem[dirpath] = {}
-  process.nextTick(callback, null)
 }
 
-function open (filepath, flags, callback) {
+export function open (filepath: string, flags: string, callback: (err: NodeJS.ErrnoException) => void): void {
   TRACE('open', filepath, flags)
   const { dir, base } = path.parse(filepath)
   if (flags.indexOf('w') !== -1) {
@@ -131,7 +153,7 @@ function open (filepath, flags, callback) {
   }
 }
 
-function readFileSync (filepath) {
+export function readFileSync (filepath: string, _options?: any): Buffer {
   TRACE('readFileSync', filepath)
   const { dir, base } = path.parse(filepath)
   if (!fakeFilesystem[dir] || !(base in fakeFilesystem[dir])) {
@@ -140,7 +162,7 @@ function readFileSync (filepath) {
   return fakeFilesystem[dir][base]
 }
 
-function rename (src, dest, callback) {
+export function rename (src: string, dest: string, callback: (err: NodeJS.ErrnoException) => void): void {
   TRACE('rename', src, dest)
   const { dir: srcdir, base: srcbase } = path.parse(src)
   const { dir: destdir, base: destbase } = path.parse(dest)
@@ -156,14 +178,17 @@ function rename (src, dest, callback) {
   process.nextTick(callback, null)
 }
 
-function stat (filepath, callback) {
+export function stat (filepath: string, callback: (err: NodeJS.ErrnoException, stats: fs.Stats) => void) {
   TRACE('stat', filepath)
   const { dir, base } = path.parse(filepath)
-  let mode
+  let mode: number
+  let size: number
   if (fakeFilesystem[filepath]) {
     mode = 0o40755
+    size = 1024
   } else if (fakeFilesystem[dir] && fakeFilesystem[dir][base]) {
     mode = 0o00644
+    size = fakeFilesystem[dir][base].length
   } else {
     return process.nextTick(callback, Object.assign(new Error('no such file or directory: ' + filepath), { errno: -2, code: 'ENOENT', syscall: 'stat', path: filepath }))
   }
@@ -178,7 +203,7 @@ function stat (filepath, callback) {
     rdev: 0,
     blksize: 0,
     ino: 1,
-    size: 1024,
+    size,
     blocks: 0,
     atimeMs: timeMs,
     mtimeMs: timeMs,
@@ -191,7 +216,7 @@ function stat (filepath, callback) {
   }))
 }
 
-function unlink (filepath, callback) {
+export function unlink (filepath: string, callback: (err: NodeJS.ErrnoException) => void): void {
   TRACE('unlink', filepath)
   const { dir, base } = path.parse(filepath)
   if (!fakeFilesystem[dir] || !(base in fakeFilesystem[dir])) {
@@ -201,12 +226,11 @@ function unlink (filepath, callback) {
   process.nextTick(callback, null)
 }
 
-module.exports = {
+const mockFs = {
   close,
   createReadStream,
   createWriteStream,
   existsSync,
-  fakeFilesystem,
   init,
   mkdir,
   open,
@@ -215,3 +239,5 @@ module.exports = {
   stat,
   unlink
 }
+
+export default mockFs

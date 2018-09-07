@@ -1,18 +1,10 @@
-'use strict'
+import { Before, Feature, Given, Scenario, Then, When } from './lib/steps'
 
-const t = require('tap')
-require('tap-given')(t)
+import zlib from 'zlib'
 
-const chai = require('chai')
-const chaiAsPromised = require('chai-as-promised')
-chai.use(chaiAsPromised)
-chai.should()
+import FsGzipBlobStorage from '../src/fs-gzip-blob-storage'
 
-const mockFs = require('../mock/mock-fs')
-
-const { FsGzipBlobStorage } = require('../lib/fs-gzip-blob-storage')
-
-const zlib = require('zlib')
+import mockFs from './lib/mock-fs'
 
 const STORAGEDIR = '/tmp/storage'
 
@@ -27,22 +19,23 @@ Feature('Test FsGzipBlobStorage errors for exclusive option', () => {
   Scenario('FsGzipBlobStorage tries to produce write stream when part file exists', () => {
     const testKey = 'exists1'
 
-    let error
-    let storage
+    let error: Error
+    let storage: FsGzipBlobStorage
 
     Before(() => {
       mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs, exclusive: true })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, exclusive: true, fs: mockFs as any })
     })
 
-    When('key test is passed in', () => {
-      return storage.createWriteStream(testKey)
-        .catch((err) => {
-          error = err
-        })
+    When('key test is passed in', async () => {
+      try {
+        await storage.createWriteStream(testKey)
+      } catch (e) {
+        error = e
+      }
     })
 
     Then('error is caught', () => {
@@ -54,22 +47,23 @@ Feature('Test FsGzipBlobStorage errors for exclusive option', () => {
   Scenario('FsGzipBlobStorage tries to produce write stream when object file exists', () => {
     const testKey = 'exists2'
 
-    let error
-    let storage
+    let error: Error
+    let storage: FsGzipBlobStorage
 
     Before(() => {
       mockFs.init(fakeFilesystem)
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs, exclusive: true })
+      storage = new FsGzipBlobStorage({ path: STORAGEDIR, exclusive: true, fs: mockFs as any })
     })
 
-    When('key test is passed in', () => {
-      return storage.createWriteStream(testKey)
-        .catch((err) => {
-          error = err
-        })
+    When('key test is passed in', async () => {
+      try {
+        await storage.createWriteStream(testKey)
+      } catch (e) {
+        error = e
+      }
     })
 
     Then('error is caught', () => {
