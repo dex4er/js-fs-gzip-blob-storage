@@ -31,7 +31,7 @@ Transpiling this module with own settings in `tsconfig.json`:
 {
   "compilerOptions": {
     "paths": {
-      "fs-gzip-blob-storage": ["node_modules/fs-gzip-blob-storage/src/fs-gzip-blob-storagee"]
+      "fs-gzip-blob-storage": ["node_modules/fs-gzip-blob-storage/src/fs-gzip-blob-storage"]
     }
   }
 }
