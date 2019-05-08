@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.1 2019-05-08
+
+* Fix for README.
+
 ## v2.0.0 2019-05-08
 
 * Breaking change: dropped support for Node 8.

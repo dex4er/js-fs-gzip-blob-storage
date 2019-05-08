@@ -11,7 +11,7 @@ This is a wrapper for
 
 ## Requirements
 
-This module requires ES6 with Node >= 6.
+This module requires ES6 with Node >= 8.
 
 ## Installation
 
@@ -152,6 +152,6 @@ object doesn't exist.
 
 ## License
 
-Copyright (c) 2018 Piotr Roszatycki <piotr.roszatycki@gmail.com>
+Copyright (c) 2018-2019 Piotr Roszatycki <piotr.roszatycki@gmail.com>
 
 [MIT](https://opensource.org/licenses/MIT)
