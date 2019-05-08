@@ -21,7 +21,7 @@
   },
   "homepage": "http://github.com/dex4er/js-fs-gzip-blob-storage",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.0.0"
   },
   "dependencies": {
     "fs-blob-storage": "^2.0.0",
