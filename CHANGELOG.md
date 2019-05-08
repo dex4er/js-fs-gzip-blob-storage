@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.0 2019-05-08
+
+* Breaking change: dropped support for Node 8.
+
 ## v1.0.0 2018-09-07
 
 * Rewritten in Typescript.
