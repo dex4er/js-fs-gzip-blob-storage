@@ -1,6 +1,6 @@
 {
   "name": "fs-gzip-blob-storage",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Blob storage on filesystem, with gzip, streams and promises API",
   "main": "lib/fs-gzip-blob-storage.js",
   "typings": "lib/fs-gzip-blob-storage.d.ts",
@@ -26,7 +26,6 @@
   "dependencies": {
     "fs-blob-storage": "^2.0.0",
     "pumpify": "^1.5.1",
-    "shx": "^0.3.2",
     "tslib": "^1.9.3"
   },
   "devDependencies": {
@@ -49,6 +48,7 @@
     "prettier": "^1.17.0",
     "promise-readable": "^3.1.5",
     "promise-writable": "^3.1.2",
+    "shx": "^0.3.2",
     "stream.pipeline-shim": "^1.0.4",
     "ts-node": "^8.1.0",
     "tslint": "^5.16.0",

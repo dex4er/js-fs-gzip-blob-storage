@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.2 2019-05-08
+
+* Fix for dependencies.
+
 ## v2.0.1 2019-05-08
 
 * Fix for README.
