@@ -1,10 +1,10 @@
-import { And, Before, Feature, Given, Scenario, Then, When } from './lib/steps'
+import {And, Before, Feature, Given, Scenario, Then, When} from './lib/steps'
 
 import path from 'path'
 import PromiseReadable from 'promise-readable'
 import PromiseWritable from 'promise-writable'
 import Pumpify from 'pumpify'
-import { Readable, Writable } from 'stream'
+import {Readable, Writable} from 'stream'
 import zlib from 'zlib'
 
 import FsGzipBlobStorage from '../src/fs-gzip-blob-storage'
@@ -18,8 +18,8 @@ Feature('Test FsGzipBlobStorage with ext option', () => {
     [STORAGEDIR]: {
       'commit.txt.gz.part': zlib.gzipSync('another file content here'),
       'read.txt.gz': zlib.gzipSync('file content here'),
-      'remove.txt.gz': zlib.gzipSync('more file content here')
-    }
+      'remove.txt.gz': zlib.gzipSync('more file content here'),
+    },
   }
 
   Scenario('FsGzipBlobStorage produces write stream', () => {
@@ -34,11 +34,11 @@ Feature('Test FsGzipBlobStorage with ext option', () => {
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
+      storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
     When('key test is passed in', async () => {
-      writable = await storage.createWriteStream(testKey, { ext: '.txt' })
+      writable = await storage.createWriteStream(testKey, {ext: '.txt'})
     })
 
     Then('created Writable should not be null', () => {
@@ -71,11 +71,11 @@ Feature('Test FsGzipBlobStorage with ext option', () => {
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
+      storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
     When('key test is passed in', async () => {
-      readable = await storage.createReadStream(testKey, { ext: '.txt' })
+      readable = await storage.createReadStream(testKey, {ext: '.txt'})
     })
 
     Then('created Readable should not be null', () => {
@@ -99,11 +99,11 @@ Feature('Test FsGzipBlobStorage with ext option', () => {
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
+      storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
     When('key rs is passed in', async () => {
-      await storage.commit(testKey, { ext: '.txt' })
+      await storage.commit(testKey, {ext: '.txt'})
     })
 
     Then('rs.part should be renamed to rs', () => {
@@ -122,11 +122,11 @@ Feature('Test FsGzipBlobStorage with ext option', () => {
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
+      storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
     When('key remove is passed in', async () => {
-      await storage.remove(testKey, { ext: '.txt' })
+      await storage.remove(testKey, {ext: '.txt'})
     })
 
     Then('remove should be removed', () => {

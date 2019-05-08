@@ -1,10 +1,10 @@
-import { And, Before, Feature, Given, Scenario, Then, When } from './lib/steps'
+import {And, Before, Feature, Given, Scenario, Then, When} from './lib/steps'
 
 import path from 'path'
 import PromiseReadable from 'promise-readable'
 import PromiseWritable from 'promise-writable'
 import Pumpify from 'pumpify'
-import { Readable, Writable } from 'stream'
+import {Readable, Writable} from 'stream'
 import zlib from 'zlib'
 
 import FsGzipBlobStorage from '../src/fs-gzip-blob-storage'
@@ -18,8 +18,8 @@ Feature('Test FsGzipBlobStorage without options', () => {
     [STORAGEDIR]: {
       'commit.gz.part': zlib.gzipSync('another file content here'),
       'read.gz': zlib.gzipSync('file content here'),
-      'remove.gz': zlib.gzipSync('more file content here')
-    }
+      'remove.gz': zlib.gzipSync('more file content here'),
+    },
   }
 
   Scenario('Make new empty FsGzipBlobStorage', () => {
@@ -46,7 +46,7 @@ Feature('Test FsGzipBlobStorage without options', () => {
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
+      storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
     When('key test is passed in', async () => {
@@ -83,7 +83,7 @@ Feature('Test FsGzipBlobStorage without options', () => {
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
+      storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
     When('key test is passed in', async () => {
@@ -111,7 +111,7 @@ Feature('Test FsGzipBlobStorage without options', () => {
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
+      storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
     When('key rs is passed in', async () => {
@@ -134,7 +134,7 @@ Feature('Test FsGzipBlobStorage without options', () => {
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
+      storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
     When('key remove is passed in', async () => {

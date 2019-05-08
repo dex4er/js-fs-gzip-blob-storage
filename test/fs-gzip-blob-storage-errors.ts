@@ -1,4 +1,4 @@
-import { Before, Feature, Given, Scenario, Then, When } from './lib/steps'
+import {Before, Feature, Given, Scenario, Then, When} from './lib/steps'
 
 import FsGzipBlobStorage from '../src/fs-gzip-blob-storage'
 
@@ -9,8 +9,8 @@ const STORAGEDIR = '/tmp/storage'
 Feature('Test FsGzipBlobStorage errors', () => {
   const fakeFilesystem = {
     [STORAGEDIR]: {
-      'empty.gz': Buffer.alloc(0)
-    }
+      'empty.gz': Buffer.alloc(0),
+    },
   }
 
   Scenario('FsGzipBlobStorage tries to produce read stream when object does not exist', () => {
@@ -24,7 +24,7 @@ Feature('Test FsGzipBlobStorage errors', () => {
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
+      storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
     When('key test is passed in', async () => {
@@ -36,8 +36,10 @@ Feature('Test FsGzipBlobStorage errors', () => {
     })
 
     Then('error is caught', () => {
-      error.should.be.an.instanceof(Error)
-        .and.have.property('code').that.is.equal('ENOENT')
+      error.should.be.an
+        .instanceof(Error)
+        .and.have.property('code')
+        .that.is.equal('ENOENT')
     })
   })
 
@@ -52,7 +54,7 @@ Feature('Test FsGzipBlobStorage errors', () => {
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
+      storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
     When('key test is passed in', async () => {
@@ -64,8 +66,10 @@ Feature('Test FsGzipBlobStorage errors', () => {
     })
 
     Then('error is caught', () => {
-      error.should.be.an.instanceof(Error)
-        .and.have.property('code').that.is.equal('ENOENT')
+      error.should.be.an
+        .instanceof(Error)
+        .and.have.property('code')
+        .that.is.equal('ENOENT')
     })
   })
 
@@ -80,7 +84,7 @@ Feature('Test FsGzipBlobStorage errors', () => {
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
+      storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
     When('key test is passed in', async () => {
@@ -92,8 +96,10 @@ Feature('Test FsGzipBlobStorage errors', () => {
     })
 
     Then('error is caught', () => {
-      error.should.be.an.instanceof(Error)
-        .and.have.property('code').that.is.equal('ENOENT')
+      error.should.be.an
+        .instanceof(Error)
+        .and.have.property('code')
+        .that.is.equal('ENOENT')
     })
   })
 
@@ -108,7 +114,7 @@ Feature('Test FsGzipBlobStorage errors', () => {
     })
 
     Given('FsGzipBlobStorage object', () => {
-      storage = new FsGzipBlobStorage({ path: STORAGEDIR, fs: mockFs as any })
+      storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
     When('key remove is passed in', async () => {
@@ -120,8 +126,10 @@ Feature('Test FsGzipBlobStorage errors', () => {
     })
 
     Then('error is caught', () => {
-      error.should.be.an.instanceof(Error)
-        .and.have.property('code').that.is.equal('ENOENT')
+      error.should.be.an
+        .instanceof(Error)
+        .and.have.property('code')
+        .that.is.equal('ENOENT')
     })
   })
 })

@@ -12,8 +12,8 @@ const pipelinePromise = util.promisify(stream.pipeline)
 const SPOOLDIR = process.env.SPOOLDIR || '.'
 const DEBUG = Boolean(process.env.DEBUG)
 
-async function main (): Promise<void> {
-  const storage = new FsGzipBlobStorage({ path: SPOOLDIR, exclusive: true })
+async function main(): Promise<void> {
+  const storage = new FsGzipBlobStorage({path: SPOOLDIR, exclusive: true})
 
   const key = process.argv[2]
 
@@ -31,7 +31,9 @@ async function main (): Promise<void> {
     for (const s of [process.stdin, writable] as any[]) {
       for (const event of ['close', 'data', 'drain', 'end', 'error', 'finish', 'pipe', 'readable', 'unpipe']) {
         const name = s === process.stdin ? 'stdin' : s.constructor.name
-        s.on(event, (arg?: any) => console.debug(`${name} emitted ${event}:`, typeof arg === 'object' ? arg.constructor.name : arg))
+        s.on(event, (arg?: any) =>
+          console.debug(`${name} emitted ${event}:`, typeof arg === 'object' ? arg.constructor.name : arg),
+        )
       }
     }
   }
@@ -46,4 +48,4 @@ async function main (): Promise<void> {
   if (DEBUG) console.info('Done.')
 }
 
-main().catch((err) => console.error(err))
+main().catch(err => console.error(err))

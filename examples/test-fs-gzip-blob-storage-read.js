@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { FsGzipBlobStorage } = require('../lib/fs-gzip-blob-storage')
+const {FsGzipBlobStorage} = require('../lib/fs-gzip-blob-storage')
 
 require('stream.pipeline-shim/auto')
 
@@ -12,8 +12,8 @@ const pipelinePromise = util.promisify(stream.pipeline)
 const SPOOLDIR = process.env.SPOOLDIR || '.'
 const DEBUG = Boolean(process.env.DEBUG)
 
-async function main () {
-  const storage = new FsGzipBlobStorage({ path: SPOOLDIR })
+async function main() {
+  const storage = new FsGzipBlobStorage({path: SPOOLDIR})
 
   const key = process.argv[2]
 
@@ -31,7 +31,9 @@ async function main () {
       for (const event of ['close', 'data', 'drain', 'end', 'error', 'finish', 'pipe', 'readable', 'unpipe']) {
         if (s === process.stdout && ['data', 'readable'].includes(event)) continue
         const name = s === process.stdout ? 'stdout' : s.constructor.name
-        s.on(event, (arg) => console.debug(`${name} emitted ${event}:`, typeof arg === 'object' ? arg.constructor.name : arg))
+        s.on(event, arg =>
+          console.debug(`${name} emitted ${event}:`, typeof arg === 'object' ? arg.constructor.name : arg),
+        )
       }
     }
   }
@@ -44,4 +46,4 @@ async function main () {
   if (DEBUG) console.info('Done.')
 }
 
-main().catch((err) => console.error(err))
+main().catch(err => console.error(err))
