@@ -310,7 +310,7 @@ export function unlink(filepath: string, callback: (err: NodeJS.ErrnoException) 
   process.nextTick(callback, null)
 }
 
-const mockFs = {
+export const mockFs = {
   close,
   createReadStream,
   createWriteStream,

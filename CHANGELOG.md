@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.1.0 2019-05-15
+
+* Uses `fs-blob-storage@2.1.0`.
+
 ## v2.0.2 2019-05-08
 
 * Fix for dependencies.

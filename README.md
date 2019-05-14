@@ -40,13 +40,13 @@ Transpiling this module with own settings in `tsconfig.json`:
 ## Usage
 
 ```js
-const { FsGzipBlobStorage } = require('fs-gzip-blob-storage')
+const {FsGzipBlobStorage} = require('fs-gzip-blob-storage')
 ```
 
 _Typescript:_
 
 ```ts
-import FsGzipBlobStorage from 'fs-gzip-blob-storage'
+import {FsGzipBlobStorage} from 'fs-gzip-blob-storage'
 ```
 
 ### DEFAULT_EXT

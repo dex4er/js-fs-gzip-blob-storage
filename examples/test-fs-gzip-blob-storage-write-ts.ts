@@ -1,6 +1,6 @@
 #!/usr/bin/env ts-node
 
-import FsGzipBlobStorage from '../src/fs-gzip-blob-storage'
+import {FsGzipBlobStorage} from '../src/fs-gzip-blob-storage'
 
 import 'stream.pipeline-shim/auto'
 
