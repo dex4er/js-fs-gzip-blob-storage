@@ -1,3 +1,8 @@
+import chai, {expect} from "chai"
+
+import dirtyChai from "dirty-chai"
+chai.use(dirtyChai)
+
 import {And, Before, Feature, Given, Scenario, Then, When} from "./lib/steps"
 
 import path from "path"
@@ -42,11 +47,11 @@ Feature("Test FsGzipBlobStorage overwrite", () => {
     })
 
     Then("created Writable should not be null", () => {
-      writable.should.be.an.instanceof(Pumpify)
+      expect(writable).to.be.an.instanceof(Pumpify)
     })
 
     And(".part file should be created", () => {
-      return mockFs.existsSync(realFilename).should.be.true
+      expect(mockFs.existsSync(realFilename)).to.be.true()
     })
 
     When("I write to the Writable stream", async () => {
@@ -56,7 +61,7 @@ Feature("Test FsGzipBlobStorage overwrite", () => {
 
     Then("new file contains the new content", () => {
       const content = zlib.gunzipSync(mockFs.readFileSync(realFilename)).toString()
-      content.should.equal("new content here")
+      expect(content).to.equal("new content here")
     })
   })
 
@@ -80,11 +85,11 @@ Feature("Test FsGzipBlobStorage overwrite", () => {
     })
 
     Then("created Writable should not be null", () => {
-      writable.should.be.an.instanceof(Pumpify)
+      expect(writable).to.be.an.instanceof(Pumpify)
     })
 
     And(".part file should be created", () => {
-      return mockFs.existsSync(realFilename).should.be.true
+      expect(mockFs.existsSync(realFilename)).to.be.true()
     })
 
     When("I write to the Writable stream", async () => {
@@ -94,7 +99,7 @@ Feature("Test FsGzipBlobStorage overwrite", () => {
 
     Then("new file contains the new content", () => {
       const content = zlib.gunzipSync(mockFs.readFileSync(realFilename)).toString()
-      content.should.equal("new content here")
+      expect(content).to.equal("new content here")
     })
   })
 
@@ -117,7 +122,7 @@ Feature("Test FsGzipBlobStorage overwrite", () => {
     })
 
     Then("rs.part should be renamed to rs", () => {
-      return mockFs.existsSync(realFilename).should.be.true
+      expect(mockFs.existsSync(realFilename)).to.be.true()
     })
   })
 })

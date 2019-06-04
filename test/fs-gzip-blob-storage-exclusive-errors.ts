@@ -1,3 +1,5 @@
+import {expect} from "chai"
+
 import {Before, Feature, Given, Scenario, Then, When} from "./lib/steps"
 
 import zlib from "zlib"
@@ -39,10 +41,9 @@ Feature("Test FsGzipBlobStorage errors for exclusive option", () => {
     })
 
     Then("error is caught", () => {
-      error.should.be.an
-        .instanceof(Error)
-        .and.have.property("code")
-        .that.is.equal("EEXIST")
+      expect(error)
+        .is.an("error")
+        .and.have.property("code", "EEXIST")
     })
   })
 
@@ -69,10 +70,9 @@ Feature("Test FsGzipBlobStorage errors for exclusive option", () => {
     })
 
     Then("error is caught", () => {
-      error.should.be.an
-        .instanceof(Error)
-        .and.have.property("code")
-        .that.is.equal("EEXIST")
+      expect(error)
+        .is.an("error")
+        .and.have.property("code", "EEXIST")
     })
   })
 })

@@ -21,12 +21,3 @@ export function And(what: string, how: (done: Mocha.Done) => void): Mocha.Test {
 export function Before(callback: (this: Mocha.Context, done: Mocha.Done) => any): void {
   before(callback)
 }
-export function After(callback: (this: Mocha.Context, done: Mocha.Done) => any): void {
-  after(callback)
-}
-
-import chai from "chai"
-chai.should()
-
-import chaiAsPromised from "chai-as-promised"
-chai.use(chaiAsPromised)
