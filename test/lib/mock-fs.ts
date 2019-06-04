@@ -1,8 +1,8 @@
 // tslint:disable:max-classes-per-file typedef
 
-import fs from 'fs'
-import path from 'path'
-import {Readable, Writable} from 'stream'
+import fs from "fs"
+import path from "path"
+import {Readable, Writable} from "stream"
 
 interface FakeFilesystemEntry {
   [path: string]: Buffer
@@ -34,12 +34,12 @@ export class MockFsReadable extends Readable {
   }
 
   _read(size: number): void {
-    TRACE('_read', size, {fd: this.fd})
+    TRACE("_read", size, {fd: this.fd})
     if (size === 0) {
       return void this.push(null)
     }
     size = size || 16384
-    const {filepath} = fds[this.fd] || {filepath: ''}
+    const {filepath} = fds[this.fd] || {filepath: ""}
     if (!filepath) {
       return void this.push(null)
     }
@@ -59,8 +59,8 @@ export class MockFsWritable extends Writable {
   }
 
   _write(chunk: string, encoding: string, callback: () => void): void {
-    TRACE('_write', chunk, encoding, {fd: this.fd})
-    const {filepath} = fds[this.fd] || {filepath: ''}
+    TRACE("_write", chunk, encoding, {fd: this.fd})
+    const {filepath} = fds[this.fd] || {filepath: ""}
     if (filepath) {
       const {dir, base} = path.parse(filepath)
       fakeFilesystem[dir][base] = Buffer.concat([fakeFilesystem[dir][base], Buffer.from(chunk)])
@@ -70,28 +70,28 @@ export class MockFsWritable extends Writable {
 }
 
 export function close(fd: number, callback: (err: NodeJS.ErrnoException) => void): void {
-  TRACE('close', fd)
+  TRACE("close", fd)
   if (fds[fd]) {
     delete fds[fd]
     return process.nextTick(callback, null)
   } else {
     return process.nextTick(
       callback,
-      Object.assign(new Error('bad file descriptor: ' + fd), {errno: -9, code: 'EBADF', syscall: 'close'}),
+      Object.assign(new Error("bad file descriptor: " + fd), {errno: -9, code: "EBADF", syscall: "close"}),
     )
   }
 }
 
 export function createReadStream(_filepath: string, options: any): MockFsReadable {
-  TRACE('createReadStream', _filepath, options)
+  TRACE("createReadStream", _filepath, options)
   const {fd} = options
   const {filepath} = fds[fd]
   const {dir, base} = path.parse(filepath)
   if (!fakeFilesystem[dir] || !(base in fakeFilesystem[dir])) {
-    throw Object.assign(new Error('no such file or directory: ' + fd.filepath), {
+    throw Object.assign(new Error("no such file or directory: " + fd.filepath), {
       errno: -2,
-      code: 'ENOENT',
-      syscall: 'open',
+      code: "ENOENT",
+      syscall: "open",
       path: filepath,
     })
   }
@@ -99,14 +99,14 @@ export function createReadStream(_filepath: string, options: any): MockFsReadabl
 }
 
 export function createWriteStream(filepath: string, options: any): MockFsWritable {
-  TRACE('createWriteStream', filepath, options)
+  TRACE("createWriteStream", filepath, options)
   const {fd} = options
   const {dir} = path.parse(filepath)
   if (!fakeFilesystem[dir]) {
-    throw Object.assign(new Error('no such file or directory: ' + filepath), {
+    throw Object.assign(new Error("no such file or directory: " + filepath), {
       errno: -2,
-      code: 'ENOENT',
-      syscall: 'open',
+      code: "ENOENT",
+      syscall: "open",
       path: filepath,
     })
   }
@@ -114,14 +114,14 @@ export function createWriteStream(filepath: string, options: any): MockFsWritabl
 }
 
 export function existsSync(filepath: string): boolean {
-  TRACE('existsSync', filepath)
+  TRACE("existsSync", filepath)
   const {dir, base} = path.parse(filepath)
   return fakeFilesystem[dir] && base in fakeFilesystem[dir]
 }
 
 export function init(newFakeFilesystem: FakeFilesystem): void {
   fakeFilesystem = JSON.parse(JSON.stringify(newFakeFilesystem), (_key, value) =>
-    value instanceof Object && value.type === 'Buffer' ? Buffer.from(value.data) : value,
+    value instanceof Object && value.type === "Buffer" ? Buffer.from(value.data) : value,
   )
   fds = []
 }
@@ -134,8 +134,8 @@ export function mkdir(
   mode: number | ((err: NodeJS.ErrnoException) => void),
   callback?: (err: NodeJS.ErrnoException) => void,
 ): void {
-  TRACE('mkdir', dirpath, mode)
-  if (typeof mode === 'function') {
+  TRACE("mkdir", dirpath, mode)
+  if (typeof mode === "function") {
     callback = mode
     mode = 0o777
   }
@@ -143,10 +143,10 @@ export function mkdir(
     if (fakeFilesystem[dirpath]) {
       return process.nextTick(
         callback,
-        Object.assign(new Error('file already exists: ' + dirpath), {
+        Object.assign(new Error("file already exists: " + dirpath), {
           errno: -17,
-          code: 'EEXIST',
-          syscall: 'mkdir',
+          code: "EEXIST",
+          syscall: "mkdir",
           path: dirpath,
         }),
       )
@@ -157,28 +157,28 @@ export function mkdir(
 }
 
 export function open(filepath: string, flags: string, callback: (err: NodeJS.ErrnoException) => void): void {
-  TRACE('open', filepath, flags)
+  TRACE("open", filepath, flags)
   const {dir, base} = path.parse(filepath)
-  if (flags.indexOf('w') !== -1) {
+  if (flags.indexOf("w") !== -1) {
     if (!fakeFilesystem[dir]) {
       return process.nextTick(
         callback,
-        Object.assign(new Error('no such file or directory: ' + filepath), {
+        Object.assign(new Error("no such file or directory: " + filepath), {
           errno: -2,
-          code: 'ENOENT',
-          syscall: 'open',
+          code: "ENOENT",
+          syscall: "open",
           path: filepath,
         }),
       )
     }
-    if (flags.indexOf('x') !== -1) {
+    if (flags.indexOf("x") !== -1) {
       if (fakeFilesystem[dir][base]) {
         return process.nextTick(
           callback,
-          Object.assign(new Error('file already exists'), {
+          Object.assign(new Error("file already exists"), {
             errno: -17,
-            code: 'EEXIST',
-            syscall: 'open',
+            code: "EEXIST",
+            syscall: "open",
             path: filepath,
           }),
         )
@@ -187,14 +187,14 @@ export function open(filepath: string, flags: string, callback: (err: NodeJS.Err
     fakeFilesystem[dir][base] = Buffer.alloc(0)
     return process.nextTick(callback, null, fds.push({filepath, offset: 0}) - 1)
   }
-  if (flags.indexOf('r') !== -1) {
+  if (flags.indexOf("r") !== -1) {
     if (!fakeFilesystem[dir] || !(base in fakeFilesystem[dir])) {
       return process.nextTick(
         callback,
-        Object.assign(new Error('no such file or directory: ' + filepath), {
+        Object.assign(new Error("no such file or directory: " + filepath), {
           errno: -2,
-          code: 'ENOENT',
-          syscall: 'open',
+          code: "ENOENT",
+          syscall: "open",
           path: filepath,
         }),
       )
@@ -204,13 +204,13 @@ export function open(filepath: string, flags: string, callback: (err: NodeJS.Err
 }
 
 export function readFileSync(filepath: string, _options?: any): Buffer {
-  TRACE('readFileSync', filepath)
+  TRACE("readFileSync", filepath)
   const {dir, base} = path.parse(filepath)
   if (!fakeFilesystem[dir] || !(base in fakeFilesystem[dir])) {
-    throw Object.assign(new Error('no such file or directory: ' + filepath), {
+    throw Object.assign(new Error("no such file or directory: " + filepath), {
       errno: -2,
-      code: 'ENOENT',
-      syscall: 'open',
+      code: "ENOENT",
+      syscall: "open",
       path: filepath,
     })
   }
@@ -218,16 +218,16 @@ export function readFileSync(filepath: string, _options?: any): Buffer {
 }
 
 export function rename(src: string, dest: string, callback: (err: NodeJS.ErrnoException) => void): void {
-  TRACE('rename', src, dest)
+  TRACE("rename", src, dest)
   const {dir: srcdir, base: srcbase} = path.parse(src)
   const {dir: destdir, base: destbase} = path.parse(dest)
   if (!fakeFilesystem[srcdir] || !(srcbase in fakeFilesystem[srcdir]) || !fakeFilesystem[destdir]) {
     return process.nextTick(
       callback,
-      Object.assign(new Error('no such file or directory: ' + src + ' -> ' + dest), {
+      Object.assign(new Error("no such file or directory: " + src + " -> " + dest), {
         errno: -2,
-        code: 'ENOENT',
-        syscall: 'open',
+        code: "ENOENT",
+        syscall: "open",
         path: src,
         dest,
       }),
@@ -243,7 +243,7 @@ export function rename(src: string, dest: string, callback: (err: NodeJS.ErrnoEx
 }
 
 export function stat(filepath: string, callback: (err: NodeJS.ErrnoException, stats: fs.Stats) => void) {
-  TRACE('stat', filepath)
+  TRACE("stat", filepath)
   const {dir, base} = path.parse(filepath)
   let mode: number
   let size: number
@@ -256,10 +256,10 @@ export function stat(filepath: string, callback: (err: NodeJS.ErrnoException, st
   } else {
     return process.nextTick(
       callback,
-      Object.assign(new Error('no such file or directory: ' + filepath), {
+      Object.assign(new Error("no such file or directory: " + filepath), {
         errno: -2,
-        code: 'ENOENT',
-        syscall: 'stat',
+        code: "ENOENT",
+        syscall: "stat",
         path: filepath,
       }),
     )
@@ -293,15 +293,15 @@ export function stat(filepath: string, callback: (err: NodeJS.ErrnoException, st
 }
 
 export function unlink(filepath: string, callback: (err: NodeJS.ErrnoException) => void): void {
-  TRACE('unlink', filepath)
+  TRACE("unlink", filepath)
   const {dir, base} = path.parse(filepath)
   if (!fakeFilesystem[dir] || !(base in fakeFilesystem[dir])) {
     return process.nextTick(
       callback,
-      Object.assign(new Error('no such file or directory: ' + filepath), {
+      Object.assign(new Error("no such file or directory: " + filepath), {
         errno: -2,
-        code: 'ENOENT',
-        syscall: 'open',
+        code: "ENOENT",
+        syscall: "open",
         path: filepath,
       }),
     )

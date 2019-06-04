@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
-const {FsGzipBlobStorage} = require('../lib/fs-gzip-blob-storage')
+const {FsGzipBlobStorage} = require("../lib/fs-gzip-blob-storage")
 
-require('stream.pipeline-shim/auto')
+require("stream.pipeline-shim/auto")
 
-const stream = require('stream')
-const util = require('util')
+const stream = require("stream")
+const util = require("util")
 
 const pipelinePromise = util.promisify(stream.pipeline)
 
-const SPOOLDIR = process.env.SPOOLDIR || '.'
+const SPOOLDIR = process.env.SPOOLDIR || "."
 const DEBUG = Boolean(process.env.DEBUG)
 
 async function main() {
@@ -23,15 +23,15 @@ async function main() {
   }
 
   const writable = await storage.createWriteStream(key)
-  if (DEBUG) console.debug('createWriteStream returned')
+  if (DEBUG) console.debug("createWriteStream returned")
 
   // extra debug trace
   if (DEBUG) {
     for (const s of [process.stdin, writable._writable, writable]) {
-      for (const event of ['close', 'data', 'drain', 'end', 'error', 'finish', 'pipe', 'readable', 'unpipe']) {
-        const name = s === process.stdin ? 'stdin' : s.constructor.name
+      for (const event of ["close", "data", "drain", "end", "error", "finish", "pipe", "readable", "unpipe"]) {
+        const name = s === process.stdin ? "stdin" : s.constructor.name
         s.on(event, arg =>
-          console.debug(`${name} emitted ${event}:`, typeof arg === 'object' ? arg.constructor.name : arg),
+          console.debug(`${name} emitted ${event}:`, typeof arg === "object" ? arg.constructor.name : arg),
         )
       }
     }
@@ -41,10 +41,10 @@ async function main() {
 
   await pipelinePromise(process.stdin, writable)
 
-  if (DEBUG) console.debug('stream finished')
+  if (DEBUG) console.debug("stream finished")
 
   await storage.commit(key)
-  if (DEBUG) console.info('Done.')
+  if (DEBUG) console.info("Done.")
 }
 
 main().catch(err => console.error(err))

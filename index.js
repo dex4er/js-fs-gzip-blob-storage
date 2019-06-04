@@ -1,1 +1,1 @@
-module.exports = require('./lib/fs-gzip-blob-storage')
+module.exports = require("./lib/fs-gzip-blob-storage")

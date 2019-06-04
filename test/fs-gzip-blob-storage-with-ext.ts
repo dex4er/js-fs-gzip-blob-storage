@@ -1,30 +1,30 @@
-import {And, Before, Feature, Given, Scenario, Then, When} from './lib/steps'
+import {And, Before, Feature, Given, Scenario, Then, When} from "./lib/steps"
 
-import path from 'path'
-import {PromiseReadable} from 'promise-readable'
-import {PromiseWritable} from 'promise-writable'
-import Pumpify from 'pumpify'
-import {Readable, Writable} from 'stream'
-import zlib from 'zlib'
+import path from "path"
+import {PromiseReadable} from "promise-readable"
+import {PromiseWritable} from "promise-writable"
+import Pumpify from "pumpify"
+import {Readable, Writable} from "stream"
+import zlib from "zlib"
 
-import {FsGzipBlobStorage} from '../src/fs-gzip-blob-storage'
+import {FsGzipBlobStorage} from "../src/fs-gzip-blob-storage"
 
-import {mockFs} from './lib/mock-fs'
+import {mockFs} from "./lib/mock-fs"
 
-const STORAGEDIR = '/tmp/storage'
+const STORAGEDIR = "/tmp/storage"
 
-Feature('Test FsGzipBlobStorage with ext option', () => {
+Feature("Test FsGzipBlobStorage with ext option", () => {
   const fakeFilesystem = {
     [STORAGEDIR]: {
-      'commit.txt.gz.part': zlib.gzipSync('another file content here'),
-      'read.txt.gz': zlib.gzipSync('file content here'),
-      'remove.txt.gz': zlib.gzipSync('more file content here'),
+      "commit.txt.gz.part": zlib.gzipSync("another file content here"),
+      "read.txt.gz": zlib.gzipSync("file content here"),
+      "remove.txt.gz": zlib.gzipSync("more file content here"),
     },
   }
 
-  Scenario('FsGzipBlobStorage produces write stream', () => {
-    const testKey = 'write'
-    const realFilename = path.join(STORAGEDIR, testKey + '.txt.gz.part')
+  Scenario("FsGzipBlobStorage produces write stream", () => {
+    const testKey = "write"
+    const realFilename = path.join(STORAGEDIR, testKey + ".txt.gz.part")
 
     let storage: FsGzipBlobStorage
     let writable: Writable
@@ -33,35 +33,35 @@ Feature('Test FsGzipBlobStorage with ext option', () => {
       mockFs.init(fakeFilesystem)
     })
 
-    Given('FsGzipBlobStorage object', () => {
+    Given("FsGzipBlobStorage object", () => {
       storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
-    When('key test is passed in', async () => {
-      writable = await storage.createWriteStream(testKey, {ext: '.txt'})
+    When("key test is passed in", async () => {
+      writable = await storage.createWriteStream(testKey, {ext: ".txt"})
     })
 
-    Then('created Writable should not be null', () => {
+    Then("created Writable should not be null", () => {
       writable.should.be.an.instanceof(Pumpify)
     })
 
-    And('.part file should be created', () => {
+    And(".part file should be created", () => {
       return mockFs.existsSync(realFilename).should.be.true
     })
 
-    When('I write to the Writable stream', async () => {
+    When("I write to the Writable stream", async () => {
       const promiseWritable = new PromiseWritable(writable)
-      await promiseWritable.writeAll('new content here')
+      await promiseWritable.writeAll("new content here")
     })
 
-    Then('new file contains the new content', () => {
+    Then("new file contains the new content", () => {
       const content = zlib.gunzipSync(mockFs.readFileSync(realFilename)).toString()
-      content.should.equal('new content here')
+      content.should.equal("new content here")
     })
   })
 
-  Scenario('FsGzipBlobStorage produces read stream', () => {
-    const testKey = 'read'
+  Scenario("FsGzipBlobStorage produces read stream", () => {
+    const testKey = "read"
 
     let readable: Readable
     let storage: FsGzipBlobStorage
@@ -70,27 +70,27 @@ Feature('Test FsGzipBlobStorage with ext option', () => {
       mockFs.init(fakeFilesystem)
     })
 
-    Given('FsGzipBlobStorage object', () => {
+    Given("FsGzipBlobStorage object", () => {
       storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
-    When('key test is passed in', async () => {
-      readable = await storage.createReadStream(testKey, {ext: '.txt'})
+    When("key test is passed in", async () => {
+      readable = await storage.createReadStream(testKey, {ext: ".txt"})
     })
 
-    Then('created Readable should not be null', () => {
+    Then("created Readable should not be null", () => {
       readable.should.be.an.instanceof(Pumpify)
     })
 
-    And('Readable should contain the content', async () => {
+    And("Readable should contain the content", async () => {
       const promiseReadable = new PromiseReadable(readable)
-      await promiseReadable.read().should.eventually.deep.equal(Buffer.from('file content here'))
+      await promiseReadable.read().should.eventually.deep.equal(Buffer.from("file content here"))
     })
   })
 
-  Scenario('FsGzipBlobStorage commits file', () => {
-    const testKey = 'commit'
-    const realFilename = path.join(STORAGEDIR, testKey + '.txt.gz')
+  Scenario("FsGzipBlobStorage commits file", () => {
+    const testKey = "commit"
+    const realFilename = path.join(STORAGEDIR, testKey + ".txt.gz")
 
     let storage: FsGzipBlobStorage
 
@@ -98,22 +98,22 @@ Feature('Test FsGzipBlobStorage with ext option', () => {
       mockFs.init(fakeFilesystem)
     })
 
-    Given('FsGzipBlobStorage object', () => {
+    Given("FsGzipBlobStorage object", () => {
       storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
-    When('key rs is passed in', async () => {
-      await storage.commit(testKey, {ext: '.txt'})
+    When("key rs is passed in", async () => {
+      await storage.commit(testKey, {ext: ".txt"})
     })
 
-    Then('rs.part should be renamed to rs', () => {
+    Then("rs.part should be renamed to rs", () => {
       return mockFs.existsSync(realFilename).should.be.true
     })
   })
 
-  Scenario('FsGzipBlobStorage removes file', () => {
-    const testKey = 'remove'
-    const realFilename = path.join(STORAGEDIR, testKey + '.txt.gz')
+  Scenario("FsGzipBlobStorage removes file", () => {
+    const testKey = "remove"
+    const realFilename = path.join(STORAGEDIR, testKey + ".txt.gz")
 
     let storage: FsGzipBlobStorage
 
@@ -121,15 +121,15 @@ Feature('Test FsGzipBlobStorage with ext option', () => {
       mockFs.init(fakeFilesystem)
     })
 
-    Given('FsGzipBlobStorage object', () => {
+    Given("FsGzipBlobStorage object", () => {
       storage = new FsGzipBlobStorage({path: STORAGEDIR, fs: mockFs as any})
     })
 
-    When('key remove is passed in', async () => {
-      await storage.remove(testKey, {ext: '.txt'})
+    When("key remove is passed in", async () => {
+      await storage.remove(testKey, {ext: ".txt"})
     })
 
-    Then('remove should be removed', () => {
+    Then("remove should be removed", () => {
       return mockFs.existsSync(realFilename).should.be.false
     })
   })

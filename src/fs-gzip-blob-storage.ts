@@ -1,8 +1,8 @@
 /// <reference types="node" />
 
-import Pumpify from 'pumpify'
-import {Readable, Writable} from 'stream'
-import zlib from 'zlib'
+import Pumpify from "pumpify"
+import {Readable, Writable} from "stream"
+import zlib from "zlib"
 
 import {
   FsBlobStorage,
@@ -11,7 +11,7 @@ import {
   FsBlobStorageReadStreamOptions,
   FsBlobStorageRemoveOptions,
   FsBlobStorageWriteStreamOptions,
-} from 'fs-blob-storage'
+} from "fs-blob-storage"
 
 export interface FsGzipBlobStorageOptions extends FsBlobStorageOptions {
   gzipExt?: string
@@ -33,7 +33,7 @@ export class FsGzipBlobStorage {
   static readonly DEFAULT_EXT = FsBlobStorage.DEFAULT_EXT
   static readonly DEFAULT_PART = FsBlobStorage.DEFAULT_PART
 
-  static readonly DEFAULT_GZIP_EXT = '.gz'
+  static readonly DEFAULT_GZIP_EXT = ".gz"
 
   private storage: FsBlobStorage
   private ext: string
