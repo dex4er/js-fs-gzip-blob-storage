@@ -48,7 +48,7 @@
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
     "promise-readable": "^5.0.1",
-    "promise-writable": "^4.1.1",
+    "promise-writable": "^5.0.1",
     "shx": "^0.3.2",
     "stream.pipeline-shim": "^1.1.0",
     "ts-node": "^8.3.0",
