@@ -69,6 +69,7 @@ Feature("Test FsGzipBlobStorage without options", () => {
     When("I write to the Writable stream", async () => {
       const promiseWritable = new PromiseWritable(writable)
       await promiseWritable.writeAll("new content here")
+      await promiseWritable.end()
     })
 
     Then("new file contains the new content", () => {
