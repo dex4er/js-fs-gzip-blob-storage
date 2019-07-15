@@ -24,7 +24,7 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
-    "fs-blob-storage": "^2.1.1",
+    "fs-blob-storage": "^2.1.2",
     "pumpify": "^2.0.0",
     "tslib": "^1.10.0"
   },
