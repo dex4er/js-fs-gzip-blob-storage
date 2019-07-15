@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "fs-blob-storage": "^2.1.1",
-    "pumpify": "^1.5.1",
+    "pumpify": "^2.0.0",
     "tslib": "^1.10.0"
   },
   "devDependencies": {
