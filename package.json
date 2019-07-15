@@ -35,7 +35,7 @@
     "@types/node": "^12.6.2",
     "@types/pumpify": "^1.4.1",
     "chai": "^4.2.0",
-    "coveralls": "^3.0.3",
+    "coveralls": "^3.0.5",
     "cross-env": "^5.2.0",
     "dirty-chai": "^2.0.1",
     "eslint": "^5.16.0",
