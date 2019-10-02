@@ -29,10 +29,10 @@
     "tslib": "^1.10.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/dirty-chai": "^2.0.0",
+    "@types/chai": "^4.2.3",
+    "@types/dirty-chai": "^2.0.2",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.6.2",
+    "@types/node": "^12.7.9",
     "@types/pumpify": "^1.4.1",
     "chai": "^4.2.0",
     "changelog-parser": "^2.8.0",
