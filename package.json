@@ -31,7 +31,7 @@
   "devDependencies": {
     "@types/chai": "^4.2.3",
     "@types/dirty-chai": "^2.0.2",
-    "@types/mocha": "^5.2.7",
+    "@types/mocha": "^8.0.3",
     "@types/node": "^12.7.11",
     "@types/pumpify": "^1.4.1",
     "@typescript-eslint/eslint-plugin": "^4.4.0",
