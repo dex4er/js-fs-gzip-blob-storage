@@ -13,7 +13,7 @@ This is a wrapper for
 
 ## Requirements
 
-This module requires ES6 with Node >= 8.
+This module requires ES6 with Node >= 10.
 
 ## Installation
 
