@@ -24,7 +24,7 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
-    "fs-blob-storage": "^2.1.4",
+    "fs-blob-storage": "^3.0.0",
     "pumpify": "^2.0.1",
     "tslib": "^1.10.0"
   },
@@ -34,16 +34,19 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.7.11",
     "@types/pumpify": "^1.4.1",
+    "@typescript-eslint/eslint-plugin": "^4.4.0",
+    "@typescript-eslint/eslint-plugin-tslint": "^4.4.0",
+    "@typescript-eslint/parser": "^4.4.0",
     "chai": "^4.2.0",
     "changelog-parser": "^2.8.0",
     "coveralls": "^3.0.6",
     "cross-env": "^6.0.3",
     "dirty-chai": "^2.0.1",
-    "eslint": "^6.5.1",
-    "eslint-config-prettier": "^6.4.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^10.0.0",
-    "eslint-plugin-promise": "^4.2.1",
+    "eslint": "^7.10.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsdoc": "^30.6.3",
+    "eslint-plugin-node": "^11.1.0",
     "markdownlint-cli": "^0.18.0",
     "mocha": "^6.2.1",
     "mocha-steps": "^1.3.0",
@@ -54,8 +57,6 @@
     "shx": "^0.3.2",
     "stream.pipeline-shim": "^1.1.0",
     "ts-node": "^8.4.1",
-    "tslint": "^5.20.0",
-    "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.6.3"
   },
   "scripts": {
@@ -63,14 +64,19 @@
     "clean": "npm run clean:compile && npm run clean:coverage",
     "clean:compile": "shx rm -rf lib",
     "clean:coverage": "shx rm -rf coverage .nyc_output",
-    "lint": "npm run compile && tsc --pretty -p examples && tsc --pretty -p test && eslint . && tslint -t stylish -p . && tslint -t stylish -p examples && tslint -t stylish -p test && prettier --ignore-path .gitignore --list-different '**/*.{js,json,md,ts,yml}' && markdownlint \"*.md\"",
+    "lint": "npm run lint:tsc:src && npm run lint:tsc:test && npm run lint:tsc:examples && npm run lint:eslint && npm run lint:prettier && npm run lint:markdownlint",
+    "lint:tsc:examples": "tsc --noEmit --pretty --project examples",
+    "lint:tsc:src": "tsc --noEmit --pretty --project .",
+    "lint:tsc:test": "tsc --noEmit --pretty --project test",
+    "lint:eslint": "eslint --ext .js,.ts .",
+    "lint:prettier": "prettier --ignore-path .gitignore --list-different '**/*.{js,json,md,ts,yml}'",
+    "lint:markdownlint": "markdownlint \"*.md\"",
     "postpublish": "node -e \"require(\\\"changelog-parser\\\")(\\\"CHANGELOG.md\\\").then(ch => console.log(ch.versions.filter(v => v.version === \\\"$npm_package_version\\\").map(v => \\\"v$npm_package_version\\n\\n\\\" + v.body).concat(\\\"Release v$npm_package_version\\\")[0]))\" | xargs -0 git tag v$npm_package_version -a -m && git push --tags",
     "prepack": "npm run compile",
     "prepublishOnly": "npm run test",
     "pretest": "npm run lint",
     "test": "npm run test:spec",
-    "test:spec": "npm run ts-mocha -- \"test/*.ts\"",
-    "test:coverage": "npm run clean:coverage && cross-env NYC=\"nyc --no-clean --reporter=lcov\" npm run test:spec && nyc report --reporter=text-summary --color",
-    "ts-mocha": "$NYC mocha --use_strict --throw-deprecation --require source-map-support/register --require ts-node/register --timeout 90000"
+    "test:spec": "$NYC mocha \"test/*.ts\"",
+    "test:coverage": "npm run clean:coverage && cross-env NYC=\"nyc --no-clean --reporter=lcov\" npm run test:spec && nyc report --reporter=text-summary --color"
   }
 }

@@ -1,17 +1,18 @@
+import path from "path"
+import {Writable} from "stream"
+import zlib from "zlib"
+
 import chai, {expect} from "chai"
 
 import dirtyChai from "dirty-chai"
 chai.use(dirtyChai)
 
-import {And, Before, Feature, Given, Scenario, Then, When} from "./lib/steps"
-
-import path from "path"
 import {PromiseWritable} from "promise-writable"
 import Pumpify from "pumpify"
-import {Writable} from "stream"
-import zlib from "zlib"
 
 import {FsGzipBlobStorage} from "../src/fs-gzip-blob-storage"
+
+import {And, Before, Feature, Given, Scenario, Then, When} from "./lib/steps"
 
 import {mockFs} from "./lib/mock-fs"
 

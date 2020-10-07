@@ -1,8 +1,9 @@
 /// <reference types="node" />
 
-import Pumpify from "pumpify"
 import {Readable, Writable} from "stream"
 import zlib from "zlib"
+
+import Pumpify from "pumpify"
 
 import {
   FsBlobStorage,
@@ -11,6 +12,7 @@ import {
   FsBlobStorageReadStreamOptions,
   FsBlobStorageRemoveOptions,
   FsBlobStorageWriteStreamOptions,
+  DEFAULT_EXT,
 } from "fs-blob-storage"
 
 export interface FsGzipBlobStorageOptions extends FsBlobStorageOptions {
@@ -29,12 +31,11 @@ export interface FsGzipBlobStorageWriteStreamOptions extends FsBlobStorageWriteS
 export interface FsGzipBlobStorageCommitOptions extends FsBlobStorageCommitOptions {}
 export interface FsGzipBlobStorageRemoveOptions extends FsBlobStorageRemoveOptions {}
 
+export {DEFAULT_EXT, DEFAULT_PART} from "fs-blob-storage"
+
+export const DEFAULT_GZIP_EXT = ".gz"
+
 export class FsGzipBlobStorage {
-  static readonly DEFAULT_EXT = FsBlobStorage.DEFAULT_EXT
-  static readonly DEFAULT_PART = FsBlobStorage.DEFAULT_PART
-
-  static readonly DEFAULT_GZIP_EXT = ".gz"
-
   private storage: FsBlobStorage
   private ext: string
   private gzipExt: string
@@ -42,8 +43,8 @@ export class FsGzipBlobStorage {
 
   constructor(options: FsGzipBlobStorageOptions = {}) {
     this.storage = new FsBlobStorage(options)
-    this.ext = options.ext !== undefined ? options.ext : FsGzipBlobStorage.DEFAULT_EXT
-    this.gzipExt = options.gzipExt !== undefined ? options.gzipExt : FsGzipBlobStorage.DEFAULT_GZIP_EXT
+    this.ext = options.ext !== undefined ? options.ext : DEFAULT_EXT
+    this.gzipExt = options.gzipExt !== undefined ? options.gzipExt : DEFAULT_GZIP_EXT
     this.gzipOptions = options.gzipOptions || {}
   }
 

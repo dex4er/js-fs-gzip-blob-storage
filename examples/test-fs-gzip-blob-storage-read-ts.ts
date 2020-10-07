@@ -1,11 +1,11 @@
 #!/usr/bin/env ts-node
 
-import {FsGzipBlobStorage} from "../src/fs-gzip-blob-storage"
-
 import "stream.pipeline-shim/auto"
 
 import stream from "stream"
 import util from "util"
+
+import {FsGzipBlobStorage} from "../src/fs-gzip-blob-storage"
 
 const pipelinePromise = util.promisify(stream.pipeline)
 

@@ -1,12 +1,12 @@
-import {expect} from "chai"
-
-import {Before, Feature, Given, Scenario, Then, When} from "./lib/steps"
-
 import zlib from "zlib"
+
+import {expect} from "chai"
 
 import {FsGzipBlobStorage} from "../src/fs-gzip-blob-storage"
 
 import {mockFs} from "./lib/mock-fs"
+
+import {Before, Feature, Given, Scenario, Then, When} from "./lib/steps"
 
 const STORAGEDIR = "/tmp/storage"
 
