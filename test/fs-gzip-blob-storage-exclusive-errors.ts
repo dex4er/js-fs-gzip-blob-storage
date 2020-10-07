@@ -41,9 +41,7 @@ Feature("Test FsGzipBlobStorage errors for exclusive option", () => {
     })
 
     Then("error is caught", () => {
-      expect(error)
-        .is.an("error")
-        .and.have.property("code", "EEXIST")
+      expect(error).is.an("error").and.have.property("code", "EEXIST")
     })
   })
 
@@ -70,9 +68,7 @@ Feature("Test FsGzipBlobStorage errors for exclusive option", () => {
     })
 
     Then("error is caught", () => {
-      expect(error)
-        .is.an("error")
-        .and.have.property("code", "EEXIST")
+      expect(error).is.an("error").and.have.property("code", "EEXIST")
     })
   })
 })
