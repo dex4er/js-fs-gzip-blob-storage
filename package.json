@@ -26,7 +26,7 @@
   "dependencies": {
     "fs-blob-storage": "^2.1.4",
     "pumpify": "^2.0.1",
-    "tslib": "^1.10.0"
+    "tslib": "^2.0.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.3",
