@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.1.0 2020-10-07
+
+- Updated dependencies for `@types/node` to v14.
+
 ## v3.0.0 2020-10-07
 
 - `DEFAULT_EXT`, `DEFAULT_PART` and `DEFAULT_GZIP_EXT` are constant strings.
