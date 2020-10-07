@@ -2,6 +2,7 @@
 
 ## v3.0.0 2020-10-07
 
+- `DEFAULT_EXT`, `DEFAULT_PART` and `DEFAULT_GZIP_EXT` are constant strings.
 - Requires Node >= 10.
 - Converted from tslint to eslint.
 
