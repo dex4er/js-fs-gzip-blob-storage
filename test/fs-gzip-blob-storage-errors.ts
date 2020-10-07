@@ -38,9 +38,7 @@ Feature("Test FsGzipBlobStorage errors", () => {
     })
 
     Then("error is caught", () => {
-      expect(error)
-        .is.an("error")
-        .and.have.property("code", "ENOENT")
+      expect(error).is.an("error").and.have.property("code", "ENOENT")
     })
   })
 
@@ -67,9 +65,7 @@ Feature("Test FsGzipBlobStorage errors", () => {
     })
 
     Then("error is caught", () => {
-      expect(error)
-        .is.an("error")
-        .and.have.property("code", "ENOENT")
+      expect(error).is.an("error").and.have.property("code", "ENOENT")
     })
   })
 
@@ -96,9 +92,7 @@ Feature("Test FsGzipBlobStorage errors", () => {
     })
 
     Then("error is caught", () => {
-      expect(error)
-        .is.an("error")
-        .and.have.property("code", "ENOENT")
+      expect(error).is.an("error").and.have.property("code", "ENOENT")
     })
   })
 
@@ -125,9 +119,7 @@ Feature("Test FsGzipBlobStorage errors", () => {
     })
 
     Then("error is caught", () => {
-      expect(error)
-        .is.an("error")
-        .and.have.property("code", "ENOENT")
+      expect(error).is.an("error").and.have.property("code", "ENOENT")
     })
   })
 })
