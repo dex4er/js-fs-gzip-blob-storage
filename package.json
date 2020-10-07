@@ -1,6 +1,6 @@
 {
   "name": "fs-gzip-blob-storage",
-  "version": "2.1.3",
+  "version": "3.0.0",
   "description": "Blob storage on filesystem, with gzip, streams and promises API",
   "main": "lib/fs-gzip-blob-storage.js",
   "typings": "lib/fs-gzip-blob-storage.d.ts",
