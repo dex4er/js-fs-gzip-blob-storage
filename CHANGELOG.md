@@ -1,6 +1,6 @@
 # Changelog
 
-## v3.1.0 2020-10-07
+## v3.0.1 2020-10-08
 
 - Updated dependencies for `@types/node` to v14.
 
