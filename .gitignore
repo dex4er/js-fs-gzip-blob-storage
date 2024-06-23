@@ -11,6 +11,7 @@
 ts-node-*
 
 /lib/
+/test/mocha.opts
 
 /coverage/
 /node_modules/
@@ -28,3 +29,5 @@ ts-node-*
 .DS_Store
 /.idea
 /.vscode
+
+/spool

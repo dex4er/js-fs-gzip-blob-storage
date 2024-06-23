@@ -2,18 +2,22 @@
 
 <!-- markdownlint-disable MD013 -->
 
-[![Build Status](https://secure.travis-ci.org/dex4er/js-fs-gzip-blob-storage.svg)](http://travis-ci.org/dex4er/js-fs-gzip-blob-storage) [![Coverage Status](https://coveralls.io/repos/github/dex4er/js-fs-gzip-blob-storage/badge.svg)](https://coveralls.io/github/dex4er/js-fs-gzip-blob-storage) [![npm](https://img.shields.io/npm/v/fs-gzip-blob-storage.svg)](https://www.npmjs.com/package/fs-gzip-blob-storage)
+[![GitHub](https://img.shields.io/github/v/release/dex4er/js-fs-gzip-blob-storage?display_name=tag&sort=semver)](https://github.com/dex4er/js-fs-gzip-blob-storage)
+[![CI](https://github.com/dex4er/js-fs-gzip-blob-storage/actions/workflows/ci.yaml/badge.svg)](https://github.com/dex4er/js-fs-gzip-blob-storage/actions/workflows/ci.yaml)
+[![Trunk Check](https://github.com/dex4er/js-fs-gzip-blob-storage/actions/workflows/trunk.yaml/badge.svg)](https://github.com/dex4er/js-fs-gzip-blob-storage/actions/workflows/trunk.yaml)
+[![Coverage Status](https://coveralls.io/repos/github/dex4er/js-fs-gzip-blob-storage/badge.svg)](https://coveralls.io/github/dex4er/js-fs-gzip-blob-storage)
+[![npm](https://img.shields.io/npm/v/fs-gzip-blob-storage.svg)](https://www.npmjs.com/package/fs-gzip-blob-storage)
 
 <!-- markdownlint-enable MD013 -->
 
-Blob storage on filesystem, with gzip, streams and promises API.
+Blob storage on a filesystem, with gzip, streams and promises API.
 
 This is a wrapper for
 [`fs-blob-storage`](https://www.npmjs.com/package/fs-blob-storage)
 
 ## Requirements
 
-This module requires ES6 with Node >= 10.
+This module requires ES6 with Node >= 16.
 
 ## Installation
 
@@ -30,15 +34,7 @@ npm install -D @types/node
 ## Usage
 
 ```js
-const {FsGzipBlobStorage} = require("fs-gzip-blob-storage")
-```
-
-_Typescript:_
-
-```ts
 import FsGzipBlobStorage from "fs-gzip-blob-storage"
-// or
-import {FsGzipBlobStorage} from "fs-gzip-blob-storage"
 ```
 
 ### DEFAULT_EXT
@@ -87,15 +83,15 @@ const writable = await storage.createWriteStream(key, options)
 
 _Options:_
 
-- `ext` is a default extension added to file name for the object (optional,
-  default: `this.ext`)
-- `part` is a extension added to file name which can be later commited
+- `ext` is a default extension added to the file name for the object
+  (optional, default: `this.ext`)
+- `part` is a extension added to the file name which can be later committed
   (optional, default: `this.part`)
 
-Creates a writable stream for a new object in the storage. Object is gzipped and
-stored with the file name based on `key` and `ext` and `gzipExt` and `part`.
-Throws an error if has occurred and if the file already exists for exclusive
-mode.
+Creates a writable stream for a new object in the storage. The object is
+gzipped and stored with the file name based on `key` and `ext` and `gzipExt`
+and `part`. Throws an error if has occurred and if the file already exists
+for exclusive mode.
 
 ### createReadStream
 
@@ -105,11 +101,12 @@ const readable = await storage.createWriteStream(key, options)
 
 _Options:_
 
-- `ext` is a default extension added to file name for the object (optional,
-  default: `this.ext`)
+- `ext` is a default extension added to the file name for the object
+  (optional, default: `this.ext`)
 
 Creates a readable stream for an existing, gunzipped object in the storage.
-Throws an error if has occurred or the object doesn't exist or its size is zero.
+Throws an error if has occurred or if the object doesn't exist or its size is
+zero.
 
 ### commit
 
@@ -119,14 +116,14 @@ await storage.commit(key, options)
 
 _Options:_
 
-- `ext` is a default extension added to file name for the object (optional,
-  default: `this.ext`)
-- `part` is a extension added to file name which can be later commited
+- `ext` is a default extension added to the file name for the object
+  (optional, default: `this.ext`)
+- `part` is a extension added to the file name which can be later committed
   (optional, default: `this.part`)
 
-Commits the object in the storage. It means that file name for the object is
-renamed and the additional extension for partial objects is removed. Throws an
-error if has occurred or the object doesn't exist.
+Commits the object in the storage. It means that the file name for the object
+is renamed and the additional extension for partial objects is removed.
+Throws an error if has occurred or the object doesn't exist.
 
 ### remove
 
@@ -136,14 +133,14 @@ await storage.remove(key, options)
 
 _Options:_
 
-- `ext` is a default extension added to file name for the object (optional,
-  default: `this.ext`)
+- `ext` is a default extension added to the file name for the object
+  (optional, default: `this.ext`)
 
 Removes the object from the storage. Throws an error if has occurred or the
 object doesn't exist.
 
 ## License
 
-Copyright (c) 2018-2020 Piotr Roszatycki <piotr.roszatycki@gmail.com>
+Copyright (c) 2018-2024 Piotr Roszatycki <piotr.roszatycki@gmail.com>
 
 [MIT](https://opensource.org/licenses/MIT)

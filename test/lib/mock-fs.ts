@@ -1,8 +1,6 @@
-// tslint:disable:max-classes-per-file typedef
-
-import fs from "fs"
-import path from "path"
-import {Readable, Writable} from "stream"
+import fs from "node:fs"
+import path from "node:path"
+import {Readable, Writable} from "node:stream"
 
 interface FakeFilesystemEntry {
   [path: string]: Buffer
@@ -26,10 +24,14 @@ function TRACE(...args: any[]): void {
   }
 }
 
-export class MockFsReadable extends Readable {
+class MockFsReadable extends Readable {
   private offset = 0
 
-  constructor(private fd: number, options: any) {
+  constructor(
+    private fd: number,
+    options: any,
+  ) {
+    TRACE("MockFsReadable", {fd})
     super(options)
   }
 
@@ -44,17 +46,30 @@ export class MockFsReadable extends Readable {
       return void this.push(null)
     }
     const {dir, base} = path.parse(filepath)
-    if (!fakeFilesystem[dir][base]) {
-      return void this.push(null)
-    }
-    const chunk = fakeFilesystem[dir][base].slice(this.offset, size)
+    const chunk = Uint8Array.prototype.slice.call(fakeFilesystem[dir][base], this.offset, size)
     this.offset += size
     this.push(chunk || null)
   }
+
+  async close(): Promise<void> {
+    TRACE("close", {fd: this.fd})
+    if (!fds[this.fd]) {
+      throw Object.assign(new Error("bad file descriptor: " + this.fd), {
+        errno: -9,
+        code: "EBADF",
+        syscall: "close",
+      })
+    }
+    delete fds[this.fd]
+  }
 }
 
-export class MockFsWritable extends Writable {
-  constructor(private fd: number, options: any) {
+class MockFsWritable extends Writable {
+  constructor(
+    private fd: number,
+    options: any,
+  ) {
+    TRACE("MockFsWritable", {fd})
     super(options)
   }
 
@@ -65,26 +80,26 @@ export class MockFsWritable extends Writable {
       const {dir, base} = path.parse(filepath)
       fakeFilesystem[dir][base] = Buffer.concat([fakeFilesystem[dir][base], Buffer.from(chunk)])
     }
+    TRACE("fakeFilesystem", fakeFilesystem)
     callback()
   }
-}
 
-export function close(fd: number, callback: (err: NodeJS.ErrnoException) => void): void {
-  TRACE("close", fd)
-  if (fds[fd]) {
-    delete fds[fd]
-    return process.nextTick(callback, null)
-  } else {
-    return process.nextTick(
-      callback,
-      Object.assign(new Error("bad file descriptor: " + fd), {errno: -9, code: "EBADF", syscall: "close"}),
-    )
+  async close(): Promise<void> {
+    TRACE("close", {fd: this.fd})
+    if (!fds[this.fd]) {
+      throw Object.assign(new Error("bad file descriptor: " + this.fd), {
+        errno: -9,
+        code: "EBADF",
+        syscall: "close",
+      })
+    }
+    delete fds[this.fd]
   }
 }
 
-export function createReadStream(_filepath: string, options: any): MockFsReadable {
+function createReadStream(_filepath: string, options: any): MockFsReadable {
   TRACE("createReadStream", _filepath, options)
-  const {fd} = options
+  const fd = typeof options === "object" ? options.fd.fd : options.fd
   const {filepath} = fds[fd]
   const {dir, base} = path.parse(filepath)
   if (!fakeFilesystem[dir] || !(base in fakeFilesystem[dir])) {
@@ -98,9 +113,9 @@ export function createReadStream(_filepath: string, options: any): MockFsReadabl
   return new MockFsReadable(fd, options)
 }
 
-export function createWriteStream(filepath: string, options: any): MockFsWritable {
+function createWriteStream(filepath: string, options: any): MockFsWritable {
   TRACE("createWriteStream", filepath, options)
-  const {fd} = options
+  const fd = typeof options === "object" ? options.fd.fd : options.fd
   const {dir} = path.parse(filepath)
   if (!fakeFilesystem[dir]) {
     throw Object.assign(new Error("no such file or directory: " + filepath), {
@@ -113,97 +128,85 @@ export function createWriteStream(filepath: string, options: any): MockFsWritabl
   return new MockFsWritable(fd, options)
 }
 
-export function existsSync(filepath: string): boolean {
+function existsSync(filepath: string): boolean {
   TRACE("existsSync", filepath)
   const {dir, base} = path.parse(filepath)
   return fakeFilesystem[dir] && base in fakeFilesystem[dir]
 }
 
-export function init(newFakeFilesystem: FakeFilesystem): void {
+function init(newFakeFilesystem: FakeFilesystem): void {
+  TRACE("init", newFakeFilesystem)
   fakeFilesystem = JSON.parse(JSON.stringify(newFakeFilesystem), (_key, value) =>
     value instanceof Object && value.type === "Buffer" ? Buffer.from(value.data) : value,
   )
   fds = []
 }
 
-export function mkdir(dirpath: string, mode: number, callback: (err: NodeJS.ErrnoException) => void): void
-export function mkdir(dirpath: string, callback: (err: NodeJS.ErrnoException) => void): void
-
-export function mkdir(
-  dirpath: string,
-  mode: number | ((err: NodeJS.ErrnoException) => void),
-  callback?: (err: NodeJS.ErrnoException) => void,
-): void {
-  TRACE("mkdir", dirpath, mode)
-  if (typeof mode === "function") {
-    callback = mode
-    mode = 0o777
-  }
-  if (callback) {
+async function mkdir(dirpath: string, options: fs.MakeDirectoryOptions): Promise<string | undefined> {
+  TRACE("mkdir", dirpath, options)
+  const recursive = options.recursive || false
+  if (recursive) {
+    fakeFilesystem[dirpath] ||= {}
+    TRACE("fakeFilesystem", fakeFilesystem)
+    return dirpath
+  } else {
     if (fakeFilesystem[dirpath]) {
-      return process.nextTick(
-        callback,
-        Object.assign(new Error("file already exists: " + dirpath), {
-          errno: -17,
-          code: "EEXIST",
-          syscall: "mkdir",
-          path: dirpath,
-        }),
-      )
+      throw Object.assign(new Error("file already exists: " + dirpath), {
+        errno: -17,
+        code: "EEXIST",
+        syscall: "mkdir",
+        path,
+      })
     }
     fakeFilesystem[dirpath] = {}
-    process.nextTick(callback, null)
+    TRACE("fakeFilesystem", fakeFilesystem)
+    return undefined
   }
 }
 
-export function open(filepath: string, flags: string, callback: (err: NodeJS.ErrnoException) => void): void {
-  TRACE("open", filepath, flags)
+async function open(filepath: string, flags: string, mode: fs.Mode): Promise<MockFsReadable | MockFsWritable> {
+  TRACE("open", filepath, flags, mode)
   const {dir, base} = path.parse(filepath)
   if (flags.indexOf("w") !== -1) {
     if (!fakeFilesystem[dir]) {
-      return process.nextTick(
-        callback,
-        Object.assign(new Error("no such file or directory: " + filepath), {
-          errno: -2,
-          code: "ENOENT",
-          syscall: "open",
-          path: filepath,
-        }),
-      )
+      throw Object.assign(new Error("no such file or directory: " + filepath), {
+        errno: -2,
+        code: "ENOENT",
+        syscall: "open",
+        path: filepath,
+      })
     }
     if (flags.indexOf("x") !== -1) {
       if (fakeFilesystem[dir][base]) {
-        return process.nextTick(
-          callback,
-          Object.assign(new Error("file already exists"), {
-            errno: -17,
-            code: "EEXIST",
-            syscall: "open",
-            path: filepath,
-          }),
-        )
+        throw Object.assign(new Error("file already exists"), {
+          errno: -17,
+          code: "EEXIST",
+          syscall: "open",
+          path: filepath,
+        })
       }
     }
     fakeFilesystem[dir][base] = Buffer.alloc(0)
-    return process.nextTick(callback, null, fds.push({filepath, offset: 0}) - 1)
+    TRACE("fakeFilesystem", fakeFilesystem)
+    const fd = fds.push({filepath, offset: 0}) - 1
+    return new MockFsWritable(fd, {})
   }
   if (flags.indexOf("r") !== -1) {
     if (!fakeFilesystem[dir] || !(base in fakeFilesystem[dir])) {
-      return process.nextTick(
-        callback,
-        Object.assign(new Error("no such file or directory: " + filepath), {
-          errno: -2,
-          code: "ENOENT",
-          syscall: "open",
-          path: filepath,
-        }),
-      )
+      throw Object.assign(new Error("no such file or directory: " + filepath), {
+        errno: -2,
+        code: "ENOENT",
+        syscall: "open",
+        path: filepath,
+      })
     }
-    return process.nextTick(callback, null, fds.push({filepath, offset: 0}) - 1)
+    const fd = fds.push({filepath, offset: 0}) - 1
+    return new MockFsReadable(fd, {})
   }
+  throw new Error("unknown mode")
 }
 
-export function readFileSync(filepath: string, _options?: any): Buffer {
+function readFileSync(filepath: string, _options?: any): Buffer {
   TRACE("readFileSync", filepath)
   const {dir, base} = path.parse(filepath)
   if (!fakeFilesystem[dir] || !(base in fakeFilesystem[dir])) {
@@ -217,32 +220,29 @@ export function readFileSync(filepath: string, _options?: any): Buffer {
   return fakeFilesystem[dir][base]
 }
 
-export function rename(src: string, dest: string, callback: (err: NodeJS.ErrnoException) => void): void {
+async function rename(src: string, dest: string): Promise<void> {
   TRACE("rename", src, dest)
   const {dir: srcdir, base: srcbase} = path.parse(src)
   const {dir: destdir, base: destbase} = path.parse(dest)
   if (!fakeFilesystem[srcdir] || !(srcbase in fakeFilesystem[srcdir]) || !fakeFilesystem[destdir]) {
-    return process.nextTick(
-      callback,
-      Object.assign(new Error("no such file or directory: " + src + " -> " + dest), {
-        errno: -2,
-        code: "ENOENT",
-        syscall: "open",
-        path: src,
-        dest,
-      }),
-    )
+    throw Object.assign(new Error("no such file or directory: " + src + " -> " + dest), {
+      errno: -2,
+      code: "ENOENT",
+      syscall: "open",
+      path: src,
+      dest,
+    })
   }
   fakeFilesystem[destdir][destbase] = fakeFilesystem[srcdir][srcbase]
   delete fakeFilesystem[srcdir][srcbase]
+  TRACE("fakeFilesystem", fakeFilesystem)
   const fd = fds.find(f => f.filepath === src)
   if (fd) {
     fd.filepath = dest
   }
-  process.nextTick(callback, null)
 }
 
-export function stat(filepath: string, callback: (err: NodeJS.ErrnoException, stats: fs.Stats) => void) {
+async function stat(filepath: string): Promise<fs.Stats> {
   TRACE("stat", filepath)
   const {dir, base} = path.parse(filepath)
   let mode: number
@@ -254,74 +254,65 @@ export function stat(filepath: string, callback: (err: NodeJS.ErrnoException, st
     mode = 0o00644
     size = fakeFilesystem[dir][base].length
   } else {
-    return process.nextTick(
-      callback,
-      Object.assign(new Error("no such file or directory: " + filepath), {
-        errno: -2,
-        code: "ENOENT",
-        syscall: "stat",
-        path: filepath,
-      }),
-    )
+    throw Object.assign(new Error("no such file or directory: " + filepath), {
+      errno: -2,
+      code: "ENOENT",
+      syscall: "stat",
+      path: filepath,
+    })
   }
   const time = new Date()
   const timeMs = time.getTime()
-  process.nextTick(
-    callback,
-    null,
-    Object.assign(new fs.Stats(), {
-      dev: 1,
-      mode,
-      nlink: 1,
-      uid: 0,
-      gid: 0,
-      rdev: 0,
-      blksize: 0,
-      ino: 1,
-      size,
-      blocks: 0,
-      atimeMs: timeMs,
-      mtimeMs: timeMs,
-      ctimeMs: timeMs,
-      birthtimeMs: timeMs,
-      atime: time,
-      mtime: time,
-      ctime: time,
-      birthtime: time,
-    }),
-  )
+  return Object.assign(new fs.Stats(), {
+    dev: 1,
+    mode,
+    nlink: 1,
+    uid: 0,
+    gid: 0,
+    rdev: 0,
+    blksize: 0,
+    ino: 1,
+    size,
+    blocks: 0,
+    atimeMs: timeMs,
+    mtimeMs: timeMs,
+    ctimeMs: timeMs,
+    birthtimeMs: timeMs,
+    atime: time,
+    mtime: time,
+    ctime: time,
+    birthtime: time,
+  })
 }
 
-export function unlink(filepath: string, callback: (err: NodeJS.ErrnoException) => void): void {
+async function unlink(filepath: string): Promise<void> {
   TRACE("unlink", filepath)
   const {dir, base} = path.parse(filepath)
   if (!fakeFilesystem[dir] || !(base in fakeFilesystem[dir])) {
-    return process.nextTick(
-      callback,
-      Object.assign(new Error("no such file or directory: " + filepath), {
-        errno: -2,
-        code: "ENOENT",
-        syscall: "open",
-        path: filepath,
-      }),
-    )
+    throw Object.assign(new Error("no such file or directory: " + filepath), {
+      errno: -2,
+      code: "ENOENT",
+      syscall: "open",
+      path: filepath,
+    })
   }
   delete fakeFilesystem[dir][base]
-  process.nextTick(callback, null)
+  TRACE("fakeFilesystem", fakeFilesystem)
 }
 
-export const mockFs = {
-  close,
+const mockFs = {
   createReadStream,
   createWriteStream,
   existsSync,
   init,
-  mkdir,
-  open,
+  promises: {
+    mkdir,
+    open,
+    rename,
+    stat,
+    unlink,
+  },
   readFileSync,
-  rename,
-  stat,
-  unlink,
 }
 
 export default mockFs

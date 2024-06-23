@@ -1,15 +1,13 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env -S node --experimental-specifier-resolution=node --no-warnings --loader ts-node/esm
 
-import "stream.pipeline-shim/auto"
+import * as stream from "node:stream"
+import * as util from "node:util"
 
-import stream from "stream"
-import util from "util"
-
-import {FsGzipBlobStorage} from "../src/fs-gzip-blob-storage"
+import {FsGzipBlobStorage} from "../src/fs-gzip-blob-storage.js"
 
 const pipelinePromise = util.promisify(stream.pipeline)
 
-const SPOOLDIR = process.env.SPOOLDIR || "."
+const SPOOLDIR = process.env.SPOOLDIR || "spool"
 const DEBUG = Boolean(process.env.DEBUG)
 
 async function main(): Promise<void> {
@@ -18,7 +16,7 @@ async function main(): Promise<void> {
   const key = process.argv[2]
 
   if (!key) {
-    console.error(`Usage: ${process.argv[1]} key`)
+    console.error(`Usage: ${process.argv[1]} key < file`)
     process.exit(1)
   }
 
@@ -26,10 +24,9 @@ async function main(): Promise<void> {
   if (DEBUG) console.debug("createWriteStream returned")
 
   // extra debug trace
-  // tslint:disable:no-unnecessary-type-assertion
   if (DEBUG) {
-    for (const s of [process.stdin, writable] as any[]) {
-      for (const event of ["close", "data", "drain", "end", "error", "finish", "pipe", "readable", "unpipe"]) {
+    for (const s of [process.stdin, writable]) {
+      for (const event of ["close", "data", "drain", "end", "error", "finish", "pipe", "unpipe"]) {
         const name = s === process.stdin ? "stdin" : s.constructor.name
         s.on(event, (arg?: any) =>
           console.debug(`${name} emitted ${event}:`, typeof arg === "object" ? arg.constructor.name : arg),

@@ -1,16 +1,14 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env -S node --experimental-specifier-resolution=node --no-warnings --loader ts-node/esm
 
-import "stream.pipeline-shim/auto"
+import * as stream from "node:stream"
+import * as util from "node:util"
 
-import stream from "stream"
-import util from "util"
-
-import {FsGzipBlobStorage} from "../src/fs-gzip-blob-storage"
+import {FsGzipBlobStorage} from "../src/fs-gzip-blob-storage.js"
 
 const pipelinePromise = util.promisify(stream.pipeline)
 
-const SPOOLDIR = process.env.SPOOLDIR || "."
-const DEBUG = process.env.DEBUG === "true"
+const SPOOLDIR = process.env.SPOOLDIR || "spool"
+const DEBUG = Boolean(process.env.DEBUG)
 
 async function main(): Promise<void> {
   const storage = new FsGzipBlobStorage({path: SPOOLDIR})
@@ -26,9 +24,8 @@ async function main(): Promise<void> {
   if (DEBUG) console.debug("createReadStream returned")
 
   // extra debug trace
-  // tslint:disable:no-unnecessary-type-assertion
   if (DEBUG) {
-    for (const s of [readable, (readable as any)._readable, process.stdout] as any[]) {
+    for (const s of [readable, (readable as any)._readable, process.stdout]) {
       for (const event of ["close", "data", "drain", "end", "error", "finish", "pipe", "readable", "unpipe"]) {
         if (s === process.stdout && ["data", "readable"].includes(event)) continue
         const name = s === process.stdout ? "stdout" : s.constructor.name

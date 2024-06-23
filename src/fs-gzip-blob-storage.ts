@@ -1,7 +1,7 @@
 /// <reference types="node" />
 
-import {Readable, Writable} from "stream"
-import zlib from "zlib"
+import {Readable, Writable} from "node:stream"
+import zlib from "node:zlib"
 
 import Pumpify from "pumpify"
 

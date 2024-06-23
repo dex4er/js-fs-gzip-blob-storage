@@ -1,21 +1,18 @@
-import path from "path"
-import {Readable, Writable} from "stream"
-import zlib from "zlib"
+import path from "node:path"
+import {Readable, Writable} from "node:stream"
+import zlib from "node:zlib"
 
-import chai, {expect} from "chai"
-
-import dirtyChai from "dirty-chai"
-chai.use(dirtyChai)
+import {expect} from "chai"
 
 import {PromiseReadable} from "promise-readable"
 import {PromiseWritable} from "promise-writable"
 import Pumpify from "pumpify"
 
-import {FsGzipBlobStorage} from "../src/fs-gzip-blob-storage"
+import {FsGzipBlobStorage} from "../src/fs-gzip-blob-storage.js"
 
-import {mockFs} from "./lib/mock-fs"
+import mockFs from "./lib/mock-fs.js"
 
-import {And, Before, Feature, Given, Scenario, Then, When} from "./lib/steps"
+import {And, Before, Feature, Given, Scenario, Then, When} from "./lib/steps.js"
 
 const STORAGEDIR = "/tmp/storage"
 
@@ -54,7 +51,7 @@ Feature("Test FsGzipBlobStorage with empty gzipExt option", () => {
     })
 
     And(".part file should be created", () => {
-      expect(mockFs.existsSync(realFilename)).to.be.true()
+      expect(mockFs.existsSync(realFilename)).to.be.true
     })
 
     When("I write to the Writable stream", async () => {
@@ -116,7 +113,7 @@ Feature("Test FsGzipBlobStorage with empty gzipExt option", () => {
     })
 
     Then("rs.part should be renamed to rs", () => {
-      expect(mockFs.existsSync(realFilename)).to.be.true()
+      expect(mockFs.existsSync(realFilename)).to.be.true
     })
   })
 
@@ -139,7 +136,7 @@ Feature("Test FsGzipBlobStorage with empty gzipExt option", () => {
     })
 
     Then("remove should be removed", () => {
-      expect(mockFs.existsSync(realFilename)).to.be.false()
+      expect(mockFs.existsSync(realFilename)).to.be.false
     })
   })
 })

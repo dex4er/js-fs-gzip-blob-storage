@@ -1,10 +1,10 @@
 import {expect} from "chai"
 
-import {FsGzipBlobStorage} from "../src/fs-gzip-blob-storage"
+import {FsGzipBlobStorage} from "../src/fs-gzip-blob-storage.js"
 
-import {mockFs} from "./lib/mock-fs"
+import mockFs from "./lib/mock-fs.js"
 
-import {Before, Feature, Given, Scenario, Then, When} from "./lib/steps"
+import {Before, Feature, Given, Scenario, Then, When} from "./lib/steps.js"
 
 const STORAGEDIR = "/tmp/storage"
 
@@ -18,7 +18,7 @@ Feature("Test FsGzipBlobStorage errors", () => {
   Scenario("FsGzipBlobStorage tries to produce read stream when object does not exist", () => {
     const testKey = "notexist"
 
-    let error: Error
+    let error: any
     let storage: FsGzipBlobStorage
 
     Before(() => {
@@ -45,7 +45,7 @@ Feature("Test FsGzipBlobStorage errors", () => {
   Scenario("FsGzipBlobStorage tries to produce read stream when object is empty", () => {
     const testKey = "empty"
 
-    let error: Error
+    let error: any
     let storage: FsGzipBlobStorage
 
     Before(() => {
@@ -72,7 +72,7 @@ Feature("Test FsGzipBlobStorage errors", () => {
   Scenario("FsGzipBlobStorage tries to commit file when part file does not exist", () => {
     const testKey = "notexist"
 
-    let error: Error
+    let error: any
     let storage: FsGzipBlobStorage
 
     Before(() => {
@@ -99,7 +99,7 @@ Feature("Test FsGzipBlobStorage errors", () => {
   Scenario("FsGzipBlobStorage tries to remove file when object does not exist", () => {
     const testKey = "notexist"
 
-    let error: Error
+    let error: any
     let storage: FsGzipBlobStorage
 
     Before(() => {

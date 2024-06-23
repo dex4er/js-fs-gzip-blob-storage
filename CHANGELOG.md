@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.0.0 2024-06-23
+
+- Converted to ESM module.
+- Requires Node >= 16.
+- Refactoring: uses `fs.promises` API.
+
 ## v3.0.1 2020-10-08
 
 - Updated dependencies for `@types/node` to v14.
